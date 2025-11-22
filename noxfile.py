@@ -88,6 +88,12 @@ def typing(session: Session) -> None:
     session.run("pyright")
 
 
+@nox.session(python=["3.13"], tags=["typing"])
+def pyright(session: Session) -> None:
+    """Run type checking with Pyright (alias for typing session)."""
+    typing(session)
+
+
 @nox.session(python=["3.13"], tags=["test"])
 def test(session: Session) -> None:
     """Run pytest if test target files exist in src directory.

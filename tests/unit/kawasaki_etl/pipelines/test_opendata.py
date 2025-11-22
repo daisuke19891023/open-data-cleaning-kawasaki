@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from kawasaki_etl.configs import PHARMACY_PERMITS_PAGE
+from kawasaki_etl.pipelines import opendata
 from kawasaki_etl.pipelines.opendata import download_opendata_page
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -28,7 +29,7 @@ def test_download_opendata_page(
         dest.write_text("dummy", encoding="utf-8")
         called.append((url, dest))
 
-    monkeypatch.setattr("kawasaki_etl.pipelines.opendata.download_file", _fake_download)
+    monkeypatch.setattr(opendata, "download_file", _fake_download)
 
     outputs = download_opendata_page(PHARMACY_PERMITS_PAGE, base_dir=tmp_path)
 
