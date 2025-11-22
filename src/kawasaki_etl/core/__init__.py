@@ -25,6 +25,10 @@ from kawasaki_etl.core.meta_store import (
     is_already_loaded,
     mark_loaded,
 )
+from kawasaki_etl.core.pdf_utils import (
+    TourismPdfExtractionError,
+    extract_tables_from_tourism_irikomi,
+)
 from kawasaki_etl.core.normalize import (
     COMMON_ENCODINGS,
     NormalizationError,
@@ -44,11 +48,13 @@ __all__ = [
     "DatasetConfigError",
     "DownloadError",
     "NormalizationError",
+    "TourismPdfExtractionError",
     "UpsertError",
     "calculate_sha256",
     "detect_encoding_and_read_csv",
     "download_file",
     "download_if_needed",
+    "extract_tables_from_tourism_irikomi",
     "get_dataset_config",
     "get_engine",
     "get_meta_path",
