@@ -207,7 +207,7 @@ nodeenv==1.9.1
     #   pyright
 nox==2025.5.1
     # via kawasaki_etl (pyproject.toml)
-numpy==2.3.2
+numpy==2.3.5
     # via scalene
 nvidia-ml-py==13.580.65
     # via scalene
