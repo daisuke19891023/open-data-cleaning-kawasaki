@@ -1,6 +1,6 @@
 # Code Style Guide
 
-This guide defines the coding standards and conventions for the Clean Interfaces project.
+This guide defines the coding standards and conventions for the Kawasaki ETL project.
 
 ## Overview
 
@@ -67,9 +67,9 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 # Local imports
-from clean_interfaces.base import BaseComponent
-from clean_interfaces.models.api import WelcomeResponse
-from clean_interfaces.utils.logger import get_logger
+from kawasaki_etl.base import BaseComponent
+from kawasaki_etl.models.api import WelcomeResponse
+from kawasaki_etl.utils.logger import get_logger
 ```
 
 ### Function and Class Definitions

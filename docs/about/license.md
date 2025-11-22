@@ -1,6 +1,6 @@
 # License
 
-Clean Interfaces is released under the MIT License.
+Kawasaki ETL is released under the MIT License.
 
 ## MIT License
 
@@ -45,7 +45,7 @@ The only requirements are:
 
 ## Third-Party Licenses
 
-Clean Interfaces uses the following open-source dependencies:
+Kawasaki ETL uses the following open-source dependencies:
 
 ### Core Dependencies
 
@@ -68,7 +68,7 @@ All dependencies are chosen to be compatible with commercial use.
 
 ## Contributing
 
-By contributing to Clean Interfaces, you agree that your contributions will be licensed under the same MIT License that covers the project.
+By contributing to Kawasaki ETL, you agree that your contributions will be licensed under the same MIT License that covers the project.
 
 ## Questions
 
@@ -80,9 +80,9 @@ If you have any questions about the license, please:
 
 ## License Notice
 
-When using Clean Interfaces in your project, please include the following notice:
+When using Kawasaki ETL in your project, please include the following notice:
 
 ```
-This software includes code from Clean Interfaces (https://github.com/your-username/clean-interfaces),
+This software includes code from Kawasaki ETL (https://github.com/your-username/kawasaki_etl),
 which is licensed under the MIT License.
 ```

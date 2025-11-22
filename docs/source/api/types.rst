@@ -1,7 +1,7 @@
-clean_interfaces.types
+kawasaki_etl.types
 ======================
 
-.. automodule:: clean_interfaces.types
+.. automodule:: kawasaki_etl.types
    :members:
    :undoc-members:
    :show-inheritance:

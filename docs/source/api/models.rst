@@ -1,12 +1,12 @@
-clean_interfaces.models
+kawasaki_etl.models
 =======================
 
-Data models for Clean Interfaces.
+Data models for Kawasaki ETL.
 
 API Models
 ----------
 
-.. automodule:: clean_interfaces.models.api
+.. automodule:: kawasaki_etl.models.api
    :members:
    :undoc-members:
    :show-inheritance:
@@ -14,7 +14,7 @@ API Models
 I/O Models
 ----------
 
-.. automodule:: clean_interfaces.models.io
+.. automodule:: kawasaki_etl.models.io
    :members:
    :undoc-members:
    :show-inheritance:

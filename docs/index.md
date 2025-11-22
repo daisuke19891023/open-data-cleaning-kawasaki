@@ -1,6 +1,6 @@
-# Clean Interfaces
+# Kawasaki ETL
 
-Welcome to **Clean Interfaces** - a flexible Python application framework with multiple interface types and comprehensive logging support.
+Welcome to **Kawasaki ETL** - a flexible Python application framework with multiple interface types and comprehensive logging support.
 
 ## Features
 
@@ -17,8 +17,8 @@ Welcome to **Clean Interfaces** - a flexible Python application framework with m
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/clean-interfaces.git
-cd clean-interfaces
+git clone https://github.com/your-username/kawasaki_etl.git
+cd kawasaki_etl
 
 # Install dependencies
 uv sync
@@ -27,18 +27,18 @@ uv sync
 cp .env.example .env
 
 # Run the application (CLI mode)
-uv run python -m clean_interfaces.main
+uv run python -m kawasaki_etl.main
 
 # Run with custom environment file
-uv run python -m clean_interfaces.main --dotenv prod.env
+uv run python -m kawasaki_etl.main --dotenv prod.env
 
 # Run REST API mode
-INTERFACE_TYPE=restapi uv run python -m clean_interfaces.main
+INTERFACE_TYPE=restapi uv run python -m kawasaki_etl.main
 ```
 
 ## Project Overview
 
-Clean Interfaces provides a clean, extensible architecture for building Python applications with multiple interface types. Whether you need a command-line tool, a REST API, or both, Clean Interfaces has you covered.
+Kawasaki ETL provides a clean, extensible architecture for building Python applications with multiple interface types. Whether you need a command-line tool, a REST API, or both, Kawasaki ETL has you covered.
 
 ### Key Components
 

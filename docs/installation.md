@@ -1,6 +1,6 @@
 # Installation
 
-This guide covers the installation of Clean Interfaces.
+This guide covers the installation of Kawasaki ETL.
 
 ## Requirements
 
@@ -30,8 +30,8 @@ If you don't have uv installed, you can install it using:
 1. **Clone the repository**
 
     ```bash
-    git clone https://github.com/your-username/clean-interfaces.git
-    cd clean-interfaces
+    git clone https://github.com/your-username/kawasaki_etl.git
+    cd kawasaki_etl
     ```
 
 2. **Create virtual environment and install dependencies**
@@ -60,10 +60,10 @@ PyPI package installation will be available once the package is published.
 
 ```bash
 # Basic installation
-uv pip install clean-interfaces
+uv pip install kawasaki_etl
 
 # With extras
-uv pip install "clean-interfaces[docs]"
+uv pip install "kawasaki_etl[docs]"
 ```
 
 ## Configuration
@@ -89,10 +89,10 @@ Verify the installation by running:
 
 ```bash
 # Show help
-uv run python -m clean_interfaces.main --help
+uv run python -m kawasaki_etl.main --help
 
 # Run the application
-uv run python -m clean_interfaces.main
+uv run python -m kawasaki_etl.main
 ```
 
 You should see output indicating that the application is running successfully.
@@ -107,10 +107,10 @@ If you encounter import errors, ensure you're running the command with `uv run`:
 
 ```bash
 # Wrong
-python -m clean_interfaces.main
+python -m kawasaki_etl.main
 
 # Correct
-uv run python -m clean_interfaces.main
+uv run python -m kawasaki_etl.main
 ```
 
 #### Environment Variables Not Loading
@@ -118,7 +118,7 @@ uv run python -m clean_interfaces.main
 Make sure your `.env` file is in the project root directory, or specify it explicitly:
 
 ```bash
-uv run python -m clean_interfaces.main --dotenv /path/to/your/.env
+uv run python -m kawasaki_etl.main --dotenv /path/to/your/.env
 ```
 
 ## Next Steps

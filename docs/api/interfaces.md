@@ -1,6 +1,6 @@
 # Interfaces Module
 
-The `interfaces` module provides different interface implementations for the Clean Interfaces application.
+The `interfaces` module provides different interface implementations for the Kawasaki ETL application.
 
 ## Overview
 
@@ -14,7 +14,7 @@ Abstract base class for all interfaces.
 
 ```python
 from abc import ABC, abstractmethod
-from clean_interfaces.interfaces.base import BaseInterface
+from kawasaki_etl.interfaces.base import BaseInterface
 
 class BaseInterface(ABC):
     """Abstract base interface."""
@@ -42,7 +42,7 @@ All interfaces must implement:
 Command-line interface implementation using Typer.
 
 ```python
-from clean_interfaces.interfaces.cli import CLIInterface
+from kawasaki_etl.interfaces.cli import CLIInterface
 
 class CLIInterface(BaseInterface):
     """Command-line interface implementation."""
@@ -77,10 +77,10 @@ Displays the application welcome message.
 ```bash
 # Run CLI interface
 export INTERFACE_TYPE=cli
-python -m clean_interfaces.main
+python -m kawasaki_etl.main
 
 # Get help
-python -m clean_interfaces.main --help
+python -m kawasaki_etl.main --help
 ```
 
 ## REST API Interface
@@ -90,7 +90,7 @@ python -m clean_interfaces.main --help
 REST API implementation using FastAPI.
 
 ```python
-from clean_interfaces.interfaces.restapi import RestAPIInterface
+from kawasaki_etl.interfaces.restapi import RestAPIInterface
 
 class RestAPIInterface(BaseInterface):
     """REST API interface implementation."""
@@ -98,7 +98,7 @@ class RestAPIInterface(BaseInterface):
     def __init__(self) -> None:
         """Initialize REST API with FastAPI app."""
         self.app = FastAPI(
-            title="Clean Interfaces API",
+            title="Kawasaki ETL API",
             version="1.0.0"
         )
         self._setup_routes()
@@ -142,10 +142,10 @@ Returns welcome message and version.
 ```bash
 # Run REST API
 export INTERFACE_TYPE=restapi
-python -m clean_interfaces.main
+python -m kawasaki_etl.main
 
 # Or with uvicorn
-uvicorn clean_interfaces.main:app --reload
+uvicorn kawasaki_etl.main:app --reload
 ```
 
 ## MCP Interface
@@ -155,7 +155,7 @@ uvicorn clean_interfaces.main:app --reload
 MCP (Model Context Protocol) implementation using FastMCP.
 
 ```python
-from clean_interfaces.interfaces.mcp import MCPInterface
+from kawasaki_etl.interfaces.mcp import MCPInterface
 
 class MCPInterface(BaseInterface):
     """MCP interface implementation."""
@@ -163,8 +163,8 @@ class MCPInterface(BaseInterface):
     def __init__(self) -> None:
         """Initialize MCP interface with FastMCP app."""
         self.mcp = FastMCP(
-            name="clean-interfaces-mcp",
-            title="Clean Interfaces MCP",
+            name="kawasaki_etl-mcp",
+            title="Kawasaki ETL MCP",
             description="A clean interface MCP implementation",
             version="1.0.0",
         )
@@ -194,7 +194,7 @@ Returns a welcome message string.
 ```bash
 # Run MCP interface
 export INTERFACE_TYPE=mcp
-python -m clean_interfaces.main
+python -m kawasaki_etl.main
 ```
 
 ## Interface Factory
@@ -204,8 +204,8 @@ python -m clean_interfaces.main
 Factory function for creating interfaces.
 
 ```python
-from clean_interfaces.interfaces.factory import create_interface
-from clean_interfaces.types import InterfaceType
+from kawasaki_etl.interfaces.factory import create_interface
+from kawasaki_etl.types import InterfaceType
 
 def create_interface(interface_type: InterfaceType) -> BaseInterface:
     """Create interface based on type.
@@ -236,7 +236,7 @@ def create_interface(interface_type: InterfaceType) -> BaseInterface:
 ### Direct Interface Creation
 
 ```python
-from clean_interfaces.interfaces import CLIInterface, RestAPIInterface
+from kawasaki_etl.interfaces import CLIInterface, RestAPIInterface
 
 # Create CLI interface
 cli = CLIInterface()
@@ -250,15 +250,15 @@ api.run()
 ### Using Factory
 
 ```python
-from clean_interfaces.interfaces import create_interface
-from clean_interfaces.types import InterfaceType
+from kawasaki_etl.interfaces import create_interface
+from kawasaki_etl.types import InterfaceType
 
 # Create based on enum
 interface = create_interface(InterfaceType.RESTAPI)
 interface.run()
 
 # Create based on settings
-from clean_interfaces.utils.settings import get_interface_settings
+from kawasaki_etl.utils.settings import get_interface_settings
 settings = get_interface_settings()
 interface = create_interface(settings.interface_type)
 interface.run()
@@ -267,7 +267,7 @@ interface.run()
 ### Custom Interface Implementation
 
 ```python
-from clean_interfaces.interfaces import BaseInterface
+from kawasaki_etl.interfaces import BaseInterface
 
 class CustomInterface(BaseInterface):
     """Custom interface implementation."""

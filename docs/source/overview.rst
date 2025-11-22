@@ -1,7 +1,7 @@
 Overview
 ========
 
-Clean Interfaces is a flexible Python application framework designed to provide multiple interface types (CLI, REST API) with a clean, extensible architecture.
+Kawasaki ETL is a flexible Python application framework designed to provide multiple interface types (CLI, REST API) with a clean, extensible architecture.
 
 Architecture
 ------------
@@ -10,7 +10,7 @@ The project follows a modular architecture with clear separation of concerns:
 
 .. code-block:: text
 
-   src/clean_interfaces/
+   src/kawasaki_etl/
    ├── interfaces/         # Interface implementations
    │   ├── base.py        # Base interface class
    │   ├── cli.py         # CLI interface using Typer

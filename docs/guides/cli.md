@@ -1,6 +1,6 @@
 # CLI Interface Guide
 
-The Command Line Interface (CLI) provides an interactive way to work with Clean Interfaces.
+The Command Line Interface (CLI) provides an interactive way to work with Kawasaki ETL.
 
 ## Overview
 
@@ -17,13 +17,13 @@ The CLI interface is built using [Typer](https://typer.tiangolo.com/), providing
 
 ```bash
 # Run with default settings
-uv run python -m clean_interfaces.main
+uv run python -m kawasaki_etl.main
 
 # Run with custom environment
-uv run python -m clean_interfaces.main --dotenv custom.env
+uv run python -m kawasaki_etl.main --dotenv custom.env
 
 # Show help
-uv run python -m clean_interfaces.main --help
+uv run python -m kawasaki_etl.main --help
 ```
 
 ### Setting CLI as Default
@@ -42,7 +42,7 @@ INTERFACE_TYPE=cli
 When you run the CLI, it starts in interactive mode:
 
 ```
-Welcome to Clean Interfaces CLI!
+Welcome to Kawasaki ETL CLI!
 Type 'help' for available commands.
 
 > help
@@ -58,7 +58,7 @@ Available commands:
 
 ```
 > hello
-Hello from Clean Interfaces!
+Hello from Kawasaki ETL!
 Current time: 2025-07-20 10:30:45
 ```
 
@@ -102,10 +102,10 @@ The main entry point supports these arguments:
 
 ```bash
 # Specify custom .env file
-uv run python -m clean_interfaces.main --dotenv /path/to/config.env
+uv run python -m kawasaki_etl.main --dotenv /path/to/config.env
 
 # Short form
-uv run python -m clean_interfaces.main -e config.env
+uv run python -m kawasaki_etl.main -e config.env
 ```
 
 ### Environment Overrides
@@ -114,10 +114,10 @@ Override specific settings without modifying files:
 
 ```bash
 # Temporary debug mode
-LOG_LEVEL=DEBUG uv run python -m clean_interfaces.main
+LOG_LEVEL=DEBUG uv run python -m kawasaki_etl.main
 
 # Change log format
-LOG_FORMAT=plain uv run python -m clean_interfaces.main
+LOG_FORMAT=plain uv run python -m kawasaki_etl.main
 ```
 
 ## CLI Development
@@ -127,7 +127,7 @@ LOG_FORMAT=plain uv run python -m clean_interfaces.main
 To add new commands to the CLI, modify the `CLIInterface` class:
 
 ```python
-# src/clean_interfaces/interfaces/cli.py
+# src/kawasaki_etl/interfaces/cli.py
 
 class CLIInterface(BaseInterface):
     def run(self) -> None:
@@ -211,7 +211,7 @@ With `LOG_FORMAT=json`, logs are structured:
 For troubleshooting:
 
 ```bash
-LOG_LEVEL=DEBUG LOG_FORMAT=console uv run python -m clean_interfaces.main
+LOG_LEVEL=DEBUG LOG_FORMAT=console uv run python -m kawasaki_etl.main
 ```
 
 ### 2. Pipe Output
@@ -219,7 +219,7 @@ LOG_LEVEL=DEBUG LOG_FORMAT=console uv run python -m clean_interfaces.main
 Useful for scripting:
 
 ```bash
-echo "hello" | uv run python -m clean_interfaces.main
+echo "hello" | uv run python -m kawasaki_etl.main
 ```
 
 ### 3. Custom Configurations
@@ -238,7 +238,7 @@ LOG_FILE_PATH=imports.log
 Add an alias for convenience:
 
 ```bash
-alias ci='uv run python -m clean_interfaces.main'
+alias ci='uv run python -m kawasaki_etl.main'
 ```
 
 ## Common Issues
@@ -249,7 +249,7 @@ If you see encoding issues:
 
 ```bash
 export PYTHONIOENCODING=utf-8
-uv run python -m clean_interfaces.main
+uv run python -m kawasaki_etl.main
 ```
 
 ### Color Output
@@ -259,7 +259,7 @@ If colors don't appear:
 ```bash
 # Force color output
 export FORCE_COLOR=1
-uv run python -m clean_interfaces.main
+uv run python -m kawasaki_etl.main
 ```
 
 ### Input Buffer
@@ -269,7 +269,7 @@ For large inputs:
 ```bash
 # Increase buffer size
 export PYTHONUNBUFFERED=1
-uv run python -m clean_interfaces.main
+uv run python -m kawasaki_etl.main
 ```
 
 ## Next Steps

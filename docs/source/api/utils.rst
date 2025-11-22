@@ -1,12 +1,12 @@
-clean_interfaces.utils
+kawasaki_etl.utils
 ======================
 
-Utility modules for Clean Interfaces.
+Utility modules for Kawasaki ETL.
 
 Logger Module
 -------------
 
-.. automodule:: clean_interfaces.utils.logger
+.. automodule:: kawasaki_etl.utils.logger
    :members:
    :undoc-members:
    :show-inheritance:
@@ -14,7 +14,7 @@ Logger Module
 Settings Module
 ---------------
 
-.. automodule:: clean_interfaces.utils.settings
+.. automodule:: kawasaki_etl.utils.settings
    :members:
    :undoc-members:
    :show-inheritance:
@@ -22,7 +22,7 @@ Settings Module
 File Handler Module
 -------------------
 
-.. automodule:: clean_interfaces.utils.file_handler
+.. automodule:: kawasaki_etl.utils.file_handler
    :members:
    :undoc-members:
    :show-inheritance:

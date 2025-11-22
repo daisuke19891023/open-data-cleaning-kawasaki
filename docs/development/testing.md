@@ -1,6 +1,6 @@
 # Testing Guide
 
-Comprehensive testing is crucial for maintaining code quality in Clean Interfaces.
+Comprehensive testing is crucial for maintaining code quality in Kawasaki ETL.
 
 ## Testing Philosophy
 
@@ -67,12 +67,12 @@ uv run pytest -k "test_file"  # Run tests matching pattern
 Test individual components in isolation:
 
 ```python
-# tests/unit/clean_interfaces/utils/test_file_handler.py
+# tests/unit/kawasaki_etl/utils/test_file_handler.py
 import pytest
 from pathlib import Path
 from unittest.mock import Mock, patch, mock_open
 
-from clean_interfaces.utils.file_handler import FileHandler
+from kawasaki_etl.utils.file_handler import FileHandler
 
 
 class TestFileHandler:
@@ -113,8 +113,8 @@ Test component interactions:
 import pytest
 from pathlib import Path
 
-from clean_interfaces.app import Application
-from clean_interfaces.types import InterfaceType
+from kawasaki_etl.app import Application
+from kawasaki_etl.types import InterfaceType
 
 
 class TestApplicationIntegration:
@@ -169,7 +169,7 @@ class TestCLIWorkflow:
         
         # Run CLI command
         result = subprocess.run(
-            [sys.executable, "-m", "clean_interfaces.main", "--help"],
+            [sys.executable, "-m", "kawasaki_etl.main", "--help"],
             capture_output=True,
             text=True,
             check=False
@@ -191,7 +191,7 @@ import pytest
 from pathlib import Path
 from typing import Generator
 
-from clean_interfaces.app import Application
+from kawasaki_etl.app import Application
 
 
 @pytest.fixture
@@ -223,7 +223,7 @@ Create reusable test components:
 
 ```python
 # tests/fixtures/factories.py
-from clean_interfaces.models.api import WelcomeResponse
+from kawasaki_etl.models.api import WelcomeResponse
 
 
 def create_welcome_response(**kwargs: Any) -> WelcomeResponse:

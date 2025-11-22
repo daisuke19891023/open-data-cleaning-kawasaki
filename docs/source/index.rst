@@ -1,9 +1,9 @@
-.. Clean Interfaces documentation master file
+.. Kawasaki ETL documentation master file
 
-Clean Interfaces Documentation
+Kawasaki ETL Documentation
 ==============================
 
-Welcome to Clean Interfaces documentation! This project provides a flexible Python application framework with multiple interface types and comprehensive logging support.
+Welcome to Kawasaki ETL documentation! This project provides a flexible Python application framework with multiple interface types and comprehensive logging support.
 
 .. toctree::
    :maxdepth: 2
@@ -36,6 +36,6 @@ Quick Links
 Project Links
 -------------
 
-* `GitHub Repository <https://github.com/your-username/clean-interfaces>`_
-* `Issue Tracker <https://github.com/your-username/clean-interfaces/issues>`_
-* `PyPI Package <https://pypi.org/project/clean-interfaces/>`_
+* `GitHub Repository <https://github.com/your-username/kawasaki_etl>`_
+* `Issue Tracker <https://github.com/your-username/kawasaki_etl/issues>`_
+* `PyPI Package <https://pypi.org/project/kawasaki_etl/>`_
