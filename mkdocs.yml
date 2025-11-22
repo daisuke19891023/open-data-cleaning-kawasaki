@@ -47,6 +47,7 @@ nav:
   - Project Docs:
       - Specification: spec.md
       - Design: design.md
+      - Dataset Catalog: datasets/catalog.md
       - Tasks: tasks.md
   - API Reference:
       - Overview: api/overview.md
