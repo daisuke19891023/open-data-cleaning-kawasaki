@@ -14,16 +14,32 @@
 
 | カテゴリ | カタログ URL | 備考 |
 | --- | --- | --- |
-| 防災・防犯 | （レポートの URL を転記） | 下記テーブルに全データセットを列挙 |
-| 医療・介護・福祉 | （レポートの URL を転記） | 代表的なデータセットの URL を下記で管理 |
-| その他カテゴリ | （必要に応じて追記） |  |
+| 医療・介護・福祉 | https://www.city.kawasaki.jp/main/opendata/opendata_category_1.html | 代表的なデータセットの URL を下記で管理 |
+| 防災・防犯 | https://www.city.kawasaki.jp/main/opendata/opendata_category_2.html | 下記テーブルに全データセットを列挙 |
+| 観光・イベント | https://www.city.kawasaki.jp/main/opendata/opendata_category_4.html |  |
+| 住まい・生活・引越し | https://www.city.kawasaki.jp/main/opendata/opendata_category_6.html |  |
+| 子育て・教育 | https://www.city.kawasaki.jp/main/opendata/opendata_category_7.html |  |
+| 公共施設・都市計画 | https://www.city.kawasaki.jp/main/opendata/opendata_category_8.html |  |
+| 人口・世帯 | https://www.city.kawasaki.jp/main/opendata/opendata_category_9.html |  |
+| 環境・エネルギー | https://www.city.kawasaki.jp/main/opendata/opendata_category_10.html |  |
+| 情報通信・先端技術 | https://www.city.kawasaki.jp/main/opendata/opendata_category_11.html |  |
+| 産業 | https://www.city.kawasaki.jp/main/opendata/opendata_category_13.html |  |
+| 地図・地理空間 | https://www.city.kawasaki.jp/main/opendata/opendata_category_18.html |  |
+| その他 | https://www.city.kawasaki.jp/main/opendata/opendata_category_19.html |  |
 
 ## データセット管理テーブル
 レポートで整理されたデータセットをカテゴリ別に追記してください。ステータスは `未着手` / `確認中` / `取り込み準備OK` / `運用中` などで運用します。`dataset_id` が付与できるものは `configs/datasets.yml` と一致させると消込が容易になります。
 
 | カテゴリ | データセット名/説明 | データセット URL | 形式 | dataset_id | ステータス | メモ |
 | --- | --- | --- | --- | --- | --- | --- |
-| 防災・防犯 | （例: 避難所一覧） | （レポートの URL を転記） | CSV 等 | （未設定なら空欄） | 未着手 |  | 
+| 防災・防犯 | （例: 避難所一覧） | （レポートの URL を転記） | CSV 等 | （未設定なら空欄） | 未着手 |  |
+| 防災・防犯 | 【2022年度】応急給水拠点一覧（令和7年4月1日時点） | https://www.city.kawasaki.jp/800/page/0000085691.html#opendata_dataset_3 |  |  | 未着手 |  |
+| 防災・防犯 | 【2021年度】資料 | https://www.city.kawasaki.jp/601/page/0000036154.html#opendata_dataset_5 |  |  | 未着手 |  |
+| 防災・防犯 | 【2021年度】内水ハザードマップ（浸水想定区域）データ | https://www.city.kawasaki.jp/800/page/0000133400.html#opendata_dataset_3 |  |  | 未着手 |  |
+| 防災・防犯 | 【2015年度】消防署・出張所一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_3 |  |  | 未着手 |  |
+| 防災・防犯 | 【2015年度】消防団（器具置場）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_4 |  |  | 未着手 |  |
+| 防災・防犯 | 【2015年度】消火栓（公設）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_5 |  |  | 未着手 |  |
+| 防災・防犯 | 【2015年度】防火水槽（公設）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_6 |  |  | 未着手 |  |
 | 医療・介護・福祉 | （例: 医療機関一覧） | （レポートの URL を転記） | CSV/Excel 等 | （未設定なら空欄） | 未着手 | 代表的なものを抜粋 |
 | … | … | … | … | … | … | … |
 
