@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-from io import BytesIO
+from typing import TYPE_CHECKING, cast
 
 import pandas as pd
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 from kawasaki_etl.utils import extract_csv, extract_excel, extract_pdf_text
 
@@ -12,19 +15,28 @@ from kawasaki_etl.utils import extract_csv, extract_excel, extract_pdf_text
 def test_extract_csv_returns_dataframe() -> None:
     csv_bytes = b"col1,col2\n1,2\n3,4"
 
-    df = extract_csv(csv_bytes)
+    df: pd.DataFrame = extract_csv(csv_bytes)
 
-    assert df.to_dict(orient="list") == {"col1": [1, 3], "col2": [2, 4]}
+    result = cast(
+        "dict[str, list[int]]",
+        df.to_dict(orient="list"),  # pyright: ignore[reportUnknownMemberType]
+    )
+
+    assert result == {"col1": [1, 3], "col2": [2, 4]}
 
 
-def test_extract_excel_reads_sheet() -> None:
-    frame = pd.DataFrame({"a": [1, 2], "b": ["x", "y"]})
-    buffer = BytesIO()
-    frame.to_excel(buffer, index=False)
+def test_extract_excel_reads_sheet(tmp_path: Path) -> None:
+    frame: pd.DataFrame = pd.DataFrame({"a": [1, 2], "b": ["x", "y"]})
+    excel_path = tmp_path / "data.xlsx"
+    frame.to_excel(excel_path, index=False)  # pyright: ignore[reportUnknownMemberType]
 
-    df = extract_excel(buffer.getvalue())
+    df: pd.DataFrame = extract_excel(excel_path.read_bytes())
+    result = cast(
+        "dict[str, list[int | str]]",
+        df.to_dict(orient="list"),  # pyright: ignore[reportUnknownMemberType]
+    )
 
-    assert df.to_dict(orient="list") == {"a": [1, 2], "b": ["x", "y"]}
+    assert result == {"a": [1, 2], "b": ["x", "y"]}
 
 
 def test_extract_pdf_text_reads_simple_pdf() -> None:
@@ -41,12 +53,12 @@ def test_extract_pdf_text_reads_simple_pdf() -> None:
     ]
 
     position = len(header)
-    offsets = []
+    offsets: list[int] = []
     for obj in objects:
         offsets.append(position)
         position += len(obj)
 
-    xref_entries = [f"{pos:010d} 00000 n \n".encode() for pos in offsets]
+    xref_entries: list[bytes] = [f"{pos:010d} 00000 n \n".encode() for pos in offsets]
     xref = b"xref\n0 6\n0000000000 65535 f \n" + b"".join(xref_entries)
     trailer = b"trailer\n<< /Root 1 0 R /Size 6 >>\n"
     startxref = len(header + b"".join(objects))
@@ -60,6 +72,6 @@ def test_extract_pdf_text_reads_simple_pdf() -> None:
         + b"\n%%EOF"
     )
 
-    text = extract_pdf_text(pdf_content)
+    text: str = extract_pdf_text(pdf_content)
 
     assert "Hello, PDF!" in text

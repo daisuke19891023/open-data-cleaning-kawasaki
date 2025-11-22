@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import httpx
+from httpx import Client, MockTransport, Request, Response
 
 from kawasaki_etl.utils import WebDataFetcher
 
@@ -15,10 +15,10 @@ if TYPE_CHECKING:
 def test_fetch_bytes_uses_client() -> None:
     payload = b"hello"
 
-    def handler(request: httpx.Request) -> httpx.Response:  # noqa: ARG001
-        return httpx.Response(200, content=payload)
+    def handler(request: Request) -> Response:  # noqa: ARG001
+        return Response(200, content=payload)
 
-    client = httpx.Client(transport=httpx.MockTransport(handler))
+    client = Client(transport=MockTransport(handler))
     fetcher = WebDataFetcher(client)
 
     assert fetcher.fetch_bytes("https://example.test/data") == payload
@@ -27,14 +27,14 @@ def test_fetch_bytes_uses_client() -> None:
 def test_fetch_text_respects_encoding() -> None:
     text_value = "こんにちは"
 
-    def handler(request: httpx.Request) -> httpx.Response:  # noqa: ARG001
-        return httpx.Response(
+    def handler(request: Request) -> Response:  # noqa: ARG001
+        return Response(
             200,
             content=text_value.encode("shift_jis"),
             headers={"content-type": "text/plain; charset=shift_jis"},
         )
 
-    client = httpx.Client(transport=httpx.MockTransport(handler))
+    client = Client(transport=MockTransport(handler))
     fetcher = WebDataFetcher(client)
 
     assert fetcher.fetch_text(
@@ -45,10 +45,10 @@ def test_fetch_text_respects_encoding() -> None:
 def test_stream_to_file_writes_contents(tmp_path: Path) -> None:
     content = b"abc123"
 
-    def handler(request: httpx.Request) -> httpx.Response:  # noqa: ARG001
-        return httpx.Response(200, content=content)
+    def handler(request: Request) -> Response:  # noqa: ARG001
+        return Response(200, content=content)
 
-    client = httpx.Client(transport=httpx.MockTransport(handler))
+    client = Client(transport=MockTransport(handler))
     fetcher = WebDataFetcher(client)
 
     destination = tmp_path / "download.bin"
@@ -59,10 +59,10 @@ def test_stream_to_file_writes_contents(tmp_path: Path) -> None:
 
 
 def test_fetch_json_parses_payload() -> None:
-    def handler(request: httpx.Request) -> httpx.Response:  # noqa: ARG001
-        return httpx.Response(200, json={"ok": True, "count": 2})
+    def handler(request: Request) -> Response:  # noqa: ARG001
+        return Response(200, json={"ok": True, "count": 2})
 
-    client = httpx.Client(transport=httpx.MockTransport(handler))
+    client = Client(transport=MockTransport(handler))
     fetcher = WebDataFetcher(client)
 
     assert fetcher.fetch_json("https://example.test/data.json") == {
@@ -72,10 +72,10 @@ def test_fetch_json_parses_payload() -> None:
 
 
 def test_context_manager_closes_owned_client() -> None:
-    def handler(request: httpx.Request) -> httpx.Response:  # noqa: ARG001
-        return httpx.Response(200, json={"ok": True})
+    def handler(request: Request) -> Response:  # noqa: ARG001
+        return Response(200, json={"ok": True})
 
-    client = httpx.Client(transport=httpx.MockTransport(handler))
+    client = Client(transport=MockTransport(handler))
 
     with WebDataFetcher(client) as fetcher:
         assert fetcher.fetch_json("https://example.test/ctx") == {"ok": True}
@@ -84,10 +84,10 @@ def test_context_manager_closes_owned_client() -> None:
 
 
 def test_close_does_not_shutdown_external_client() -> None:
-    def handler(request: httpx.Request) -> httpx.Response:  # noqa: ARG001
-        return httpx.Response(200, content=b"done")
+    def handler(request: Request) -> Response:  # noqa: ARG001
+        return Response(200, content=b"done")
 
-    client = httpx.Client(transport=httpx.MockTransport(handler))
+    client = Client(transport=MockTransport(handler))
     fetcher = WebDataFetcher(client)
 
     fetcher.close()
