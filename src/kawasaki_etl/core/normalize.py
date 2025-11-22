@@ -134,9 +134,8 @@ def _sanitize_sheet_name(name: str) -> str:
 def normalize_excel(path: Path, dest_dir: Path) -> dict[str, Path]:
     """Normalize all sheets in an Excel workbook to UTF-8 CSV files."""
     dest_dir.mkdir(parents=True, exist_ok=True)
-    sheets = cast(
-        "dict[str, DataFrame]",
-        pd.read_excel(path, sheet_name=None),  # pyright: ignore[reportUnknownMemberType]
+    sheets: dict[str, DataFrame] = pd.read_excel(  # pyright: ignore[reportUnknownMemberType]
+        path, sheet_name=None
     )
     output_paths: dict[str, Path] = {}
 
