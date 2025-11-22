@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 __all__ = ["download_opendata_page", "run_tourism_irikomi", "run_wifi_count"]
 
 
-def __getattr__(name: str):  # pragma: no cover - thin lazy import wrapper
+def __getattr__(name: str) -> Any:  # pragma: no cover - thin lazy import wrapper
     if name == "run_tourism_irikomi":
         from kawasaki_etl.pipelines.tourism import run_tourism_irikomi
 
@@ -20,7 +20,8 @@ def __getattr__(name: str):  # pragma: no cover - thin lazy import wrapper
         from kawasaki_etl.pipelines.opendata import download_opendata_page
 
         return download_opendata_page
-    raise AttributeError(f"module {__name__!s} has no attribute {name!s}")
+    message = f"module {__name__!s} has no attribute {name!s}"
+    raise AttributeError(message)
 
 
 if TYPE_CHECKING:  # pragma: no cover

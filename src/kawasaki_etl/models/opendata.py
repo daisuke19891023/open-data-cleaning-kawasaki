@@ -17,6 +17,7 @@ class OpenDataResource:
 
     @property
     def filename(self) -> str:
+        """リソースURLから取得したファイル名."""
         parsed = urlparse(self.url)
         return Path(parsed.path).name
 
@@ -32,4 +33,5 @@ class OpenDataPage:
 
     @property
     def storage_dirname(self) -> str:
+        """ページを保存する際のディレクトリ名."""
         return self.identifier
