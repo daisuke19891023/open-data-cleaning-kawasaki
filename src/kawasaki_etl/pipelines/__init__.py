@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-__all__ = ["download_opendata_page", "run_tourism_irikomi", "run_wifi_count"]
+__all__ = [
+    "download_disaster_prevention_pages",
+    "download_opendata_page",
+    "iter_disaster_prevention_pages",
+    "run_tourism_irikomi",
+    "run_wifi_count",
+]
 
 
 def __getattr__(name: str) -> Any:  # pragma: no cover - thin lazy import wrapper
@@ -16,6 +22,14 @@ def __getattr__(name: str) -> Any:  # pragma: no cover - thin lazy import wrappe
         from kawasaki_etl.pipelines.wifi import run_wifi_count
 
         return run_wifi_count
+    if name == "download_disaster_prevention_pages":
+        from kawasaki_etl.pipelines.disaster import download_disaster_prevention_pages
+
+        return download_disaster_prevention_pages
+    if name == "iter_disaster_prevention_pages":
+        from kawasaki_etl.pipelines.disaster import iter_disaster_prevention_pages
+
+        return iter_disaster_prevention_pages
     if name == "download_opendata_page":
         from kawasaki_etl.pipelines.opendata import download_opendata_page
 
@@ -25,6 +39,10 @@ def __getattr__(name: str) -> Any:  # pragma: no cover - thin lazy import wrappe
 
 
 if TYPE_CHECKING:  # pragma: no cover
+    from kawasaki_etl.pipelines.disaster import (
+        download_disaster_prevention_pages,
+        iter_disaster_prevention_pages,
+    )
     from kawasaki_etl.pipelines.opendata import download_opendata_page
     from kawasaki_etl.pipelines.tourism import run_tourism_irikomi
     from kawasaki_etl.pipelines.wifi import run_wifi_count

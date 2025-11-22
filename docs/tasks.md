@@ -116,6 +116,17 @@
   - wifi_2020_count と tourism_r05_irikomi を消込済みとして記載し、config/ローダー準備済みであることを明示。
   - mkdocs.yml に Dataset Catalog を追加し、ドキュメントサイトから閲覧できるようにした。
 
+### T12. 防災カテゴリのオープンデータ一括取得
+- **概要**: 防災・防犯カテゴリに掲載されている各データの URL と識別子を定義し、一括ダウンロード処理を追加する。
+- **Acceptance Criteria**
+  - 防災カテゴリのデータセット URL と dataset_id が config で管理されている。
+  - download_disaster_prevention_pages で全リソースが指定ディレクトリに保存される。
+- **DoD**: グローバル DoD。データセットカタログへ dataset_id とステータスを反映すること。
+- **Status: DONE**
+  - `configs.disaster_prevention` に防災カテゴリ7件の OpenDataPage 定義を追加し、パイプライン経由で一括ダウンロード可能にした。
+  - データセットカタログに dataset_id と「取り込み準備OK」ステータスを記載し、利用パスを明示。
+  - `uv run --extra dev nox -s lint typing test` で lint/型チェック/テストが成功することを確認。
+
 ## 進め方の提案
 - 最初のスプリントで **T1〜T4 + T7** を完了して「ETL 基盤の骨格」を作る。
 - その後 **T8** で 1 本の CSV パイプラインを end-to-end で通し、冪等性や DB 連携を検証する。
