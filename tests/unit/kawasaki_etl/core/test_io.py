@@ -51,7 +51,9 @@ class _DummyClient:
 
 
 def _patch_http_client(
-    monkeypatch: pytest.MonkeyPatch, body: bytes, status_code: int = 200,
+    monkeypatch: pytest.MonkeyPatch,
+    body: bytes,
+    status_code: int = 200,
 ) -> None:
     def dummy_factory(*_args: object, **_kwargs: object) -> _DummyClient:
         return _DummyClient(body, status_code)
@@ -85,7 +87,8 @@ def test_get_raw_path_uses_category_and_dataset(
 
 
 def test_download_file_saves_content(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """HTTP 200 のコンテンツが保存されることを確認."""
     _patch_http_client(monkeypatch, body=b"hello", status_code=200)
@@ -98,7 +101,8 @@ def test_download_file_saves_content(
 
 
 def test_download_file_raises_on_error(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """HTTP エラー時に DownloadError が送出される."""
     _patch_http_client(monkeypatch, body=b"oops", status_code=404)

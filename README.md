@@ -19,6 +19,19 @@ configs/datasets.yml
 
 データ配置はリポジトリ内の `data/` ディレクトリに整理済みで、クローン直後からパスが分かります（Git では無視されるため生データは追跡されません）。
 
+### Wi-Fi 接続数パイプライン
+
+`wifi_2020_count` など Wi-Fi 系データセットは以下のカラムに正規化され、DB の `wifi_access_counts` テーブルへ UPSERT されます。
+
+- `dataset_id`: datasets.yml の ID（例: `wifi_2020_count`）
+- `date`: 接続日（YYYY-MM-DD）
+- `spot_id`: スポット識別子（CSV の「スポットID」などをマッピング）
+- `spot_name`: スポット名称
+- `connection_count`: 当日の接続回数（数値化・欠損は 0 扱い）
+- `snapshot_date`: データ提供側が示すスナップショット日（存在する場合）
+
+主キーは `date` と `spot_id` の組み合わせで、2 回同じ CSV を流してもレコードは重複せず更新されます。
+
 ## Features
 
 -   **Multiple Interface Types**: Support for CLI and REST API interfaces

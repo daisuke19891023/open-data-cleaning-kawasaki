@@ -37,9 +37,13 @@ def test_fetch_text_respects_encoding() -> None:
     client = Client(transport=MockTransport(handler))
     fetcher = WebDataFetcher(client)
 
-    assert fetcher.fetch_text(
-        "https://example.test/text", encoding="shift_jis",
-    ) == text_value
+    assert (
+        fetcher.fetch_text(
+            "https://example.test/text",
+            encoding="shift_jis",
+        )
+        == text_value
+    )
 
 
 def test_stream_to_file_writes_contents(tmp_path: Path) -> None:
