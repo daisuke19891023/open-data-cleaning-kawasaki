@@ -116,13 +116,12 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
     connection_raw: Series = cast(
         "Series", processed.loc[:, "connection_count"],
     )  # pyright: ignore[reportUnnecessaryCast]
-    connection_series: Series = cast(
-        "Series",
+    connection_series: Series = pd.Series(
         pd.to_numeric(  # pyright: ignore[reportUnknownMemberType]
             connection_raw,
             errors="coerce",
         ),
-    )  # pyright: ignore[reportUnnecessaryCast]
+    )
     processed["connection_count"] = connection_series.fillna(0)  # pyright: ignore[reportUnknownMemberType]
 
     processed = processed.dropna(subset=["date", "spot_id"])  # pyright: ignore[reportUnknownMemberType]
