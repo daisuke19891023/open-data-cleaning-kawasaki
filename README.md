@@ -137,7 +137,7 @@ wifi_2020_count:
     encoding: utf-8
 ```
 
-取得したデータは `data/raw/<category>/<dataset_id>/`, 正規化後は `data/normalized/...`, メタ情報は `data/meta/` に配置します。`data/` 配下は `.gitignore` により追跡対象外です。
+取得したデータは `data/raw/<category>/<dataset_id>/`, 正規化後は `data/normalized/...`, メタ情報は `data/meta/` に配置します。`data/` 配下は `.gitignore` により追跡対象外です。メタファイルの JSON 形式と保存パスの詳細は [docs/meta_store.md](docs/meta_store.md) を参照してください。
 
 ### Environment Variables
 
