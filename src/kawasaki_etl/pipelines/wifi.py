@@ -99,24 +99,30 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
 
     processed: DataFrame = renamed.copy()
     # Normalize Series typing for downstream datetime/astype operations
-    date_raw: Series = cast("Series", processed.loc[:, "date"])
+    date_raw: Series = cast(
+        "Series", processed.loc[:, "date"],
+    )  # pyright: ignore[reportUnnecessaryCast]
     date_series: Series = pd.to_datetime(  # pyright: ignore[reportUnknownMemberType]
         date_raw,
         errors="coerce",
     )
     processed["date"] = date_series.dt.date  # pyright: ignore[reportUnknownMemberType]
 
-    spot_id_raw: Series = cast("Series", processed.loc[:, "spot_id"])
+    spot_id_raw: Series = cast(
+        "Series", processed.loc[:, "spot_id"],
+    )  # pyright: ignore[reportUnnecessaryCast]
     processed["spot_id"] = spot_id_raw.astype(str)  # pyright: ignore[reportUnknownMemberType]
 
-    connection_raw: Series = cast("Series", processed.loc[:, "connection_count"])
+    connection_raw: Series = cast(
+        "Series", processed.loc[:, "connection_count"],
+    )  # pyright: ignore[reportUnnecessaryCast]
     connection_series: Series = cast(
         "Series",
         pd.to_numeric(  # pyright: ignore[reportUnknownMemberType]
             connection_raw,
             errors="coerce",
         ),
-    )
+    )  # pyright: ignore[reportUnnecessaryCast]
     processed["connection_count"] = connection_series.fillna(0)  # pyright: ignore[reportUnknownMemberType]
 
     processed = processed.dropna(subset=["date", "spot_id"])  # pyright: ignore[reportUnknownMemberType]
