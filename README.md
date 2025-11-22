@@ -231,6 +231,15 @@ Features:
 -   Help documentation
 -   Command completion
 
+Common ETL commands:
+
+```bash
+# Download raw data for the given dataset ID
+uv run python -m kawasaki_etl.main etl download wifi_2020_count
+
+# データは data/raw/<category>/<dataset_id>/ 以下に保存されます
+```
+
 ### REST API Interface
 
 The REST API interface provides HTTP endpoints using FastAPI:

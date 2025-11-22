@@ -5,7 +5,13 @@ from pathlib import Path
 import typer
 from rich.console import Console
 
-from kawasaki_etl.core import DatasetConfigError, load_dataset_configs
+from kawasaki_etl.core import (
+    DatasetConfigError,
+    DownloadError,
+    download_if_needed,
+    get_dataset_config,
+    load_dataset_configs,
+)
 from kawasaki_etl.models.io import WelcomeMessage
 
 from .base import BaseInterface
@@ -47,6 +53,10 @@ class CLIInterface(BaseInterface):
         debug_app = typer.Typer(name="debug", help="デバッグ・検証用のサブコマンド")
         debug_app.command(name="list-datasets")(self.list_datasets)
         self.app.add_typer(debug_app, name="debug")
+
+        etl_app = typer.Typer(name="etl", help="ETL パイプライン関連コマンド")
+        etl_app.command(name="download")(self.download_dataset)
+        self.app.add_typer(etl_app, name="etl")
 
         # Add a callback that shows welcome when no command is specified
         self.app.callback(invoke_without_command=True)(self._main_callback)
@@ -92,6 +102,41 @@ class CLIInterface(BaseInterface):
             console.print(
                 f"- {dataset_id} ({dataset_config.category}/{dataset_config.type})",
             )
+
+    def download_dataset(self, dataset_id: str) -> None:
+        """Download raw data for the specified dataset."""
+        try:
+            dataset = get_dataset_config(dataset_id, self.datasets_config_path)
+        except DatasetConfigError as exc:
+            self.logger.error(
+                "Unknown dataset id",
+                dataset_id=dataset_id,
+                error=str(exc),
+            )
+            typer.secho(
+                f"データセット '{dataset_id}' が見つかりません: {exc}",
+                err=True,
+                fg=typer.colors.RED,
+            )
+            raise typer.Exit(code=1) from exc
+
+        try:
+            dest_path = download_if_needed(dataset)
+        except DownloadError as exc:
+            self.logger.error(
+                "Failed to download dataset",
+                dataset_id=dataset_id,
+                url=dataset.url,
+                error=str(exc),
+            )
+            typer.secho(
+                f"ダウンロードに失敗しました: {exc}",
+                err=True,
+                fg=typer.colors.RED,
+            )
+            raise typer.Exit(code=1) from exc
+
+        console.print(f"ダウンロード先: {dest_path}")
 
     def run(self) -> None:
         """Run the CLI interface."""

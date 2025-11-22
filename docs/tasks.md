@@ -38,6 +38,10 @@
   - `etl download <dataset_id>` で `data/raw/...` に保存される。
   - 2 回目は「既に存在するためスキップ」ログが出て再ダウンロードされない。
 - **DoD**: グローバル DoD。失敗時は適切に例外処理＋ログ出力されること。
+- **Status: DONE**
+  - `core.io` にダウンロード処理を集約し、HTTP タイムアウトや書き込み失敗をハンドリング。
+  - Typer CLI に `etl download <dataset_id>` を追加し、`data/raw/<category>/<dataset_id>/` へ保存する共通動作を提供。
+  - 冪等性確認のユニットテストと CLI 経由のダウンロードテストを追加。
 
 ### T4. CSV/Excel/ZIP 正規化（core.normalize）の実装
 - **概要**: 文字コード検出や CSV/Excel/ZIP 内 CSV の正規化を行い、UTF-8 に変換する共通関数を提供する。
