@@ -46,8 +46,9 @@ class WifiPipelineError(Exception):
 def _resolve_column_name(  # pyright: ignore[reportUnknownArgumentType,reportUnknownVariableType,reportUnknownMemberType]
     df: DataFrame, target: str, candidates: Iterable[str],
 ) -> str:
-    columns_raw = cast("list[str]", df.columns.to_list())
-    column_names: list[str] = [str(col) for col in columns_raw]
+    column_names: list[str] = [
+        str(col) for col in cast("list[object]", df.columns.to_list())
+    ]
     normalized_columns: dict[str, str] = {}
     for name in column_names:
         normalized_key: str = normalize_column_name(name).lower()  # pyright: ignore[reportUnknownArgumentType]
@@ -97,17 +98,17 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
         raise WifiPipelineError(msg)
 
     processed: DataFrame = renamed.copy()
-    date_raw: Series = cast("Series", processed["date"])
+    date_raw: Series = cast("Series", processed.loc[:, "date"])
     date_series: Series = pd.to_datetime(  # pyright: ignore[reportUnknownMemberType]
         date_raw,
         errors="coerce",
     )
     processed["date"] = date_series.dt.date  # pyright: ignore[reportUnknownMemberType]
 
-    spot_id_raw: Series = cast("Series", processed["spot_id"])
+    spot_id_raw: Series = cast("Series", processed.loc[:, "spot_id"])
     processed["spot_id"] = spot_id_raw.astype(str)  # pyright: ignore[reportUnknownMemberType]
 
-    connection_raw: Series = cast("Series", processed["connection_count"])
+    connection_raw: Series = cast("Series", processed.loc[:, "connection_count"])
     connection_series: Series = cast(
         "Series",
         pd.to_numeric(  # pyright: ignore[reportUnknownMemberType]
