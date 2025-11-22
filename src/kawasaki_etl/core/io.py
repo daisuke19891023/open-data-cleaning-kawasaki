@@ -46,9 +46,13 @@ def download_file(url: str, dest_path: Path) -> None:
     dest_path.parent.mkdir(parents=True, exist_ok=True)
 
     try:
-        with httpx.Client(
-            timeout=30.0, follow_redirects=True,
-        ) as client, client.stream("GET", url) as response:
+        with (
+            httpx.Client(
+                timeout=30.0,
+                follow_redirects=True,
+            ) as client,
+            client.stream("GET", url) as response,
+        ):
             if response.status_code >= HTTP_ERROR_THRESHOLD:
                 msg = f"HTTP {response.status_code}"
                 raise DownloadError(msg)
@@ -59,7 +63,10 @@ def download_file(url: str, dest_path: Path) -> None:
     except HTTPErrorType as exc:
         if isinstance(exc, TimeoutErrorType):
             logger.error(
-                "Download timed out", url=url, dest=str(dest_path), error=str(exc),
+                "Download timed out",
+                url=url,
+                dest=str(dest_path),
+                error=str(exc),
             )
             msg = "ダウンロードがタイムアウトしました"
         elif isinstance(exc, RequestErrorType):

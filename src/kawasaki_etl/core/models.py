@@ -53,10 +53,7 @@ class DatasetConfig:
         elif isinstance(key_fields_candidate, list):
             key_fields_data = cast("list[Any]", key_fields_candidate)
         else:
-            msg = (
-                f"Dataset '{dataset_id}' has invalid key_fields "
-                "(must be a list)"
-            )
+            msg = f"Dataset '{dataset_id}' has invalid key_fields (must be a list)"
             raise DatasetConfigError(msg)
         key_fields = [str(field) for field in key_fields_data]
 
@@ -65,8 +62,7 @@ class DatasetConfig:
             extra_candidate = {}
         if not isinstance(extra_candidate, Mapping):
             msg = (
-                f"Dataset '{dataset_id}' has invalid extra section "
-                "(must be a mapping)"
+                f"Dataset '{dataset_id}' has invalid extra section (must be a mapping)"
             )
             raise DatasetConfigError(msg)
         extra_mapping = cast("Mapping[str, Any]", extra_candidate)

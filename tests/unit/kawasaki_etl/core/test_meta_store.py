@@ -29,7 +29,9 @@ def sample_dataset() -> DatasetConfig:
 
 
 def test_get_meta_path_mirrors_raw_structure(
-    sample_dataset: DatasetConfig, monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    sample_dataset: DatasetConfig,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """Meta files mirror the raw hierarchy and add a .json suffix."""
     monkeypatch.setattr(meta_store, "META_DATA_DIR", tmp_path)
@@ -51,7 +53,9 @@ def test_calculate_sha256_returns_digest(tmp_path: Path) -> None:
 
 
 def test_mark_loaded_and_is_already_loaded(
-    sample_dataset: DatasetConfig, monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    sample_dataset: DatasetConfig,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """Verify metadata writing and idempotency checks work as expected."""
     monkeypatch.setattr(meta_store, "META_DATA_DIR", tmp_path / "meta")
@@ -82,7 +86,9 @@ def test_mark_loaded_and_is_already_loaded(
 
 
 def test_is_already_loaded_returns_false_for_corrupted_meta(
-    sample_dataset: DatasetConfig, monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    sample_dataset: DatasetConfig,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """Corrupted metadata should not mark the dataset as processed."""
     monkeypatch.setattr(meta_store, "META_DATA_DIR", tmp_path / "meta")
@@ -94,4 +100,3 @@ def test_is_already_loaded_returns_false_for_corrupted_meta(
     meta_path.write_text("{not-json", encoding="utf-8")
 
     assert is_already_loaded(sample_dataset, raw_path, "ignored") is False
-

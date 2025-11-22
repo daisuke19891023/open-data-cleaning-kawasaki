@@ -45,7 +45,8 @@ class WebDataFetcher(BaseComponent):
         self._default_timeout: TimeoutType = default_timeout
 
     def _resolve_timeout(
-        self, timeout: TimeoutType,
+        self,
+        timeout: TimeoutType,
     ) -> TimeoutType:
         return self._default_timeout if timeout is None else timeout
 
@@ -80,7 +81,10 @@ class WebDataFetcher(BaseComponent):
         """Return text content from a URL."""
         resolved_timeout = self._resolve_timeout(timeout)
         self.logger.debug(
-            "Fetching text", url=url, timeout=resolved_timeout, encoding=encoding,
+            "Fetching text",
+            url=url,
+            timeout=resolved_timeout,
+            encoding=encoding,
         )
         response = self._client.get(url, timeout=resolved_timeout, headers=headers)
         response.raise_for_status()
@@ -138,7 +142,10 @@ class WebDataFetcher(BaseComponent):
         )
 
         with self._client.stream(
-            "GET", url, timeout=resolved_timeout, headers=headers,
+            "GET",
+            url,
+            timeout=resolved_timeout,
+            headers=headers,
         ) as response:
             response.raise_for_status()
             with target_path.open("wb") as fp:

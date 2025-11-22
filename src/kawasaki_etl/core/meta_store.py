@@ -27,10 +27,7 @@ def get_meta_path(dataset: DatasetConfig, raw_path: Path) -> Path:
     ``.json`` to the raw filename.
     """
     return (
-        META_DATA_DIR
-        / dataset.category
-        / dataset.dataset_id
-        / f"{raw_path.name}.json"
+        META_DATA_DIR / dataset.category / dataset.dataset_id / f"{raw_path.name}.json"
     )
 
 
@@ -59,14 +56,18 @@ def _ensure_isoformat(value: Any) -> str:
 
 
 def mark_loaded(
-    dataset: DatasetConfig, raw_path: Path, sha256: str, processed_at: Any,
+    dataset: DatasetConfig,
+    raw_path: Path,
+    sha256: str,
+    processed_at: Any,
 ) -> Path:
     """Persist metadata indicating that a dataset file has been processed."""
     meta_path = get_meta_path(dataset, raw_path)
     meta_path.parent.mkdir(parents=True, exist_ok=True)
 
     downloaded_at = datetime.datetime.fromtimestamp(
-        raw_path.stat().st_mtime, tz=datetime.UTC,
+        raw_path.stat().st_mtime,
+        tz=datetime.UTC,
     ).isoformat()
 
     record = {
@@ -146,4 +147,3 @@ def is_already_loaded(dataset: DatasetConfig, raw_path: Path, sha256: str) -> bo
         matches_sha=matches_sha,
     )
     return False
-

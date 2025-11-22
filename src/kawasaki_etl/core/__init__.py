@@ -12,6 +12,13 @@ from kawasaki_etl.core.io import (
     download_if_needed,
     get_raw_path,
 )
+from kawasaki_etl.core.db import (
+    DBConfigError,
+    DBConnectionError,
+    UpsertError,
+    get_engine,
+    upsert_dataframe,
+)
 from kawasaki_etl.core.meta_store import (
     calculate_sha256,
     get_meta_path,
@@ -31,15 +38,19 @@ from kawasaki_etl.core.normalize import (
 
 __all__ = [
     "COMMON_ENCODINGS",
+    "DBConfigError",
+    "DBConnectionError",
     "DatasetConfig",
     "DatasetConfigError",
     "DownloadError",
     "NormalizationError",
+    "UpsertError",
     "calculate_sha256",
     "detect_encoding_and_read_csv",
     "download_file",
     "download_if_needed",
     "get_dataset_config",
+    "get_engine",
     "get_meta_path",
     "get_raw_path",
     "is_already_loaded",
@@ -50,4 +61,5 @@ __all__ = [
     "normalize_csv",
     "normalize_excel",
     "normalize_zip_of_csv",
+    "upsert_dataframe",
 ]

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Self
 
+import pytest
+from sqlalchemy import create_engine
 from typer.testing import CliRunner
 
 import kawasaki_etl.core.io as io_module
@@ -10,6 +12,8 @@ from kawasaki_etl.interfaces.cli import CLIInterface
 if TYPE_CHECKING:
     from collections.abc import Iterator
     from pathlib import Path
+    from sqlalchemy.engine import Engine
+    from kawasaki_etl.core.models import DatasetConfig
     import pytest
 
 
@@ -84,3 +88,109 @@ def test_cli_download_command(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -
     assert dest_file.exists()
     assert dest_file.read_bytes() == b"payload"
     assert "ダウンロード先" in result.stdout
+
+
+def test_etl_list_command(tmp_path: Path) -> None:
+    """Etl list で datasets.yml の ID が表示されること."""
+    runner = CliRunner()
+    datasets_path = tmp_path / "datasets.yml"
+    datasets_path.write_text(
+        """
+        datasets:
+          wifi_sample:
+            category: wifi
+            url: https://example.com/wifi.csv
+            type: csv
+        """,
+        encoding="utf-8",
+    )
+
+    cli = CLIInterface(datasets_config_path=datasets_path)
+    result = runner.invoke(cli.app, ["etl", "list"])
+
+    assert result.exit_code == 0
+    assert "wifi_sample" in result.stdout
+
+
+def test_etl_run_invokes_wifi_pipeline(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    """Etl run で Wi-Fi パイプラインが実行されること."""
+    runner = CliRunner()
+    datasets_path = tmp_path / "datasets.yml"
+    datasets_path.write_text(
+        """
+        datasets:
+          wifi_sample:
+            category: wifi
+            url: https://example.com/wifi.csv
+            type: csv
+            table: wifi_access_counts
+        """,
+        encoding="utf-8",
+    )
+
+    called: list[tuple[str, Engine | None]] = []
+    engine = create_engine("sqlite://")
+
+    def fake_run_wifi(dataset: DatasetConfig, engine: Engine | None = None) -> None:
+        called.append((dataset.dataset_id, engine))
+
+    cli = CLIInterface(datasets_config_path=datasets_path)
+
+    def _get_engine(_alias: str) -> Engine:
+        return engine
+
+    monkeypatch.setattr(cli, "_get_engine", value=_get_engine)  # pyright: ignore[reportCallIssue]
+    monkeypatch.setattr(
+        "kawasaki_etl.interfaces.cli.run_wifi_count", fake_run_wifi,
+    )  # pyright: ignore[reportCallIssue]
+
+    result = runner.invoke(cli.app, ["etl", "run", "wifi_sample"])
+
+    assert result.exit_code == 0
+    assert called == [("wifi_sample", engine)]
+
+
+def test_etl_run_all_invokes_all(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    """Etl run-all で全データセットが処理されること."""
+    runner = CliRunner()
+    datasets_path = tmp_path / "datasets.yml"
+    datasets_path.write_text(
+        """
+        datasets:
+          wifi_a:
+            category: wifi
+            url: https://example.com/a.csv
+            type: csv
+          wifi_b:
+            category: wifi
+            url: https://example.com/b.csv
+            type: csv
+        """,
+        encoding="utf-8",
+    )
+
+    called: list[str] = []
+    engine = create_engine("sqlite://")
+
+    def fake_run_wifi(dataset: DatasetConfig, engine: Engine | None = None) -> None:
+        _ = engine
+        called.append(dataset.dataset_id)
+
+    cli = CLIInterface(datasets_config_path=datasets_path)
+
+    def _get_engine(_alias: str) -> Engine:
+        return engine
+
+    monkeypatch.setattr(cli, "_get_engine", value=_get_engine)  # pyright: ignore[reportCallIssue]
+    monkeypatch.setattr(
+        "kawasaki_etl.interfaces.cli.run_wifi_count", fake_run_wifi,
+    )  # pyright: ignore[reportCallIssue]
+
+    result = runner.invoke(cli.app, ["etl", "run-all"])
+
+    assert result.exit_code == 0
+    assert called == ["wifi_a", "wifi_b"]
