@@ -3,18 +3,17 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Self
 
 import pytest
-from pytest import MonkeyPatch
 from sqlalchemy import create_engine
-from sqlalchemy.engine import Engine
 from typer.testing import CliRunner
 
 import kawasaki_etl.core.io as io_module
-from kawasaki_etl.core.models import DatasetConfig
 from kawasaki_etl.interfaces.cli import CLIInterface
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
     from pathlib import Path
+    from sqlalchemy.engine import Engine
+    from kawasaki_etl.core.models import DatasetConfig
     import pytest
 
 
@@ -114,7 +113,7 @@ def test_etl_list_command(tmp_path: Path) -> None:
 
 
 def test_etl_run_invokes_wifi_pipeline(
-    monkeypatch: MonkeyPatch, tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
 ) -> None:
     """Etl run で Wi-Fi パイプラインが実行されること."""
     runner = CliRunner()
@@ -144,7 +143,7 @@ def test_etl_run_invokes_wifi_pipeline(
 
     monkeypatch.setattr(cli, "_get_engine", value=_get_engine)  # pyright: ignore[reportCallIssue]
     monkeypatch.setattr(
-        "kawasaki_etl.interfaces.cli.run_wifi_count", fake_run_wifi
+        "kawasaki_etl.interfaces.cli.run_wifi_count", fake_run_wifi,
     )  # pyright: ignore[reportCallIssue]
 
     result = runner.invoke(cli.app, ["etl", "run", "wifi_sample"])
@@ -154,7 +153,7 @@ def test_etl_run_invokes_wifi_pipeline(
 
 
 def test_etl_run_all_invokes_all(
-    monkeypatch: MonkeyPatch, tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
 ) -> None:
     """Etl run-all で全データセットが処理されること."""
     runner = CliRunner()
@@ -188,7 +187,7 @@ def test_etl_run_all_invokes_all(
 
     monkeypatch.setattr(cli, "_get_engine", value=_get_engine)  # pyright: ignore[reportCallIssue]
     monkeypatch.setattr(
-        "kawasaki_etl.interfaces.cli.run_wifi_count", fake_run_wifi
+        "kawasaki_etl.interfaces.cli.run_wifi_count", fake_run_wifi,
     )  # pyright: ignore[reportCallIssue]
 
     result = runner.invoke(cli.app, ["etl", "run-all"])

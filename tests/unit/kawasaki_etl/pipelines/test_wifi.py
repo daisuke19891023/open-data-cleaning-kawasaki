@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING
 
 import pytest
 from sqlalchemy import Column, Integer, MetaData, String, Table, create_engine, text
-from sqlalchemy.engine import Engine
 
 from kawasaki_etl.core.models import DatasetConfig
 from kawasaki_etl.pipelines import wifi
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from sqlalchemy.engine import Engine
 
 
 @pytest.fixture

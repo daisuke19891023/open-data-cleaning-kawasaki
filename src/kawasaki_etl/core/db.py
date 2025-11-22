@@ -3,20 +3,21 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Mapping, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from pandas import DataFrame
 import yaml
 from sqlalchemy import MetaData, Table, create_engine, text
 from sqlalchemy.dialects.postgresql import Insert as PGInsert
 from sqlalchemy.dialects.postgresql import insert as pg_insert
-from sqlalchemy.dialects.sqlite import Insert as SQLiteInsert
 from sqlalchemy.exc import SQLAlchemyError
 
 from kawasaki_etl.utils.logger import LoggerProtocol, get_logger
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
     from pandas import DataFrame
+    from sqlalchemy.dialects.sqlite import Insert as SQLiteInsert
     from sqlalchemy.engine import Engine
 
 logger: LoggerProtocol = get_logger(__name__)
@@ -101,7 +102,7 @@ def _load_db_config_yaml(config_path: Path) -> dict[str, DBConfig]:
         msg = f"DB config file must contain a mapping at top level: {config_path}"
         raise DBConfigError(msg)
 
-    loaded_map = cast(dict[str, Mapping[str, Any]], loaded_raw)
+    loaded_map = cast("dict[str, Mapping[str, Any]]", loaded_raw)
 
     configs: dict[str, DBConfig] = {}
     for alias, entry in loaded_map.items():
@@ -176,13 +177,17 @@ def upsert_dataframe(
             raise UpsertError(msg)
 
     records: list[dict[str, Any]] = cast(
-        list[dict[str, Any]], df.to_dict(orient="records")  # pyright: ignore[reportUnknownMemberType]
+        "list[dict[str, Any]]",
+        df.to_dict(orient="records"),  # pyright: ignore[reportUnknownMemberType]
     )
     if not records:
         logger.info("Skip upsert: no records to insert", table=table_name)
         return
 
-    insert_stmt_any = cast(Any, _build_insert_statement(table, engine).values(records))
+    insert_stmt_any = cast(
+        "Any",
+        _build_insert_statement(table, engine).values(records),
+    )
     update_columns: dict[str, Any] = {}
     for column in table.columns:
         if column.name in key_fields:

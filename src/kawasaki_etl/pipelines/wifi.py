@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Iterable, cast
+from typing import TYPE_CHECKING, cast
 
 import pandas as pd
 from pandas import Series
@@ -22,6 +22,7 @@ from kawasaki_etl.core.db import UpsertError, get_engine, upsert_dataframe
 from kawasaki_etl.utils.logger import LoggerProtocol, get_logger
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
     from sqlalchemy.engine import Engine
 
 DataFrame = pd.DataFrame
@@ -45,11 +46,12 @@ class WifiPipelineError(Exception):
 
 
 def _resolve_column_name(  # pyright: ignore[reportUnknownArgumentType,reportUnknownVariableType,reportUnknownMemberType]
-    df: DataFrame, target: str, candidates: Iterable[str]
+    df: DataFrame, target: str, candidates: Iterable[str],
 ) -> str:
-    column_names: list[str] = []
-    for col in df.columns.to_list():  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportUnknownArgumentType]
-        column_names.append(str(col))  # pyright: ignore[reportUnknownArgumentType]
+    column_names: list[str] = [
+        str(col)
+        for col in df.columns.to_list()  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportUnknownArgumentType]
+    ]
     normalized_columns: dict[str, str] = {}
     for name in column_names:
         normalized_key: str = normalize_column_name(name).lower()  # pyright: ignore[reportUnknownArgumentType]
@@ -66,7 +68,8 @@ def _resolve_column_name(  # pyright: ignore[reportUnknownArgumentType,reportUnk
 def _rename_wifi_columns(df: DataFrame, config: DatasetConfig) -> DataFrame:
     column_mapping_raw = config.extra.get("column_mapping", {})
     column_mapping: dict[str, list[str] | str] = cast(
-        dict[str, list[str] | str], column_mapping_raw
+        "dict[str, list[str] | str]",
+        column_mapping_raw,
     )
     resolved: dict[str, str] = {}
 
@@ -100,16 +103,18 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
     processed = renamed.copy()
     date_raw: Series = cast("Series", processed["date"])
     date_series: Series = pd.to_datetime(  # pyright: ignore[reportUnknownMemberType]
-        date_raw, errors="coerce"
+        date_raw,
+        errors="coerce",
     )
     processed["date"] = date_series.dt.date  # pyright: ignore[reportUnknownMemberType]
 
-    spot_id_raw: Series = cast(Series, processed["spot_id"])
+    spot_id_raw: Series = cast("Series", processed["spot_id"])
     processed["spot_id"] = spot_id_raw.astype(str)  # pyright: ignore[reportUnknownMemberType]
 
-    connection_raw: Series = cast(Series, processed["connection_count"])
+    connection_raw: Series = cast("Series", processed["connection_count"])
     connection_series: Series = cast(
-        Series, pd.to_numeric(connection_raw, errors="coerce")  # pyright: ignore[reportUnknownMemberType]
+        "Series",
+        pd.to_numeric(connection_raw, errors="coerce"),  # pyright: ignore[reportUnknownMemberType]
     )
     processed["connection_count"] = connection_series.fillna(0)  # pyright: ignore[reportUnknownMemberType]
 
