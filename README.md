@@ -1,23 +1,45 @@
 # Kawasaki ETL
 
-川崎市オープンデータの収集・正規化・格納を行う ETL & 解析基盤です。`configs/datasets.yml` にデータセット定義を記述すると、CLI からダウンロード/正規化/DB 連携のパイプラインを順次拡張できる構成になっています。
+川崎市オープンデータを「ダウンロード → 正規化 → データベース連携」まで一気通貫で扱うための ETL フレームワークです。`configs/datasets.yml` にデータセット定義を書くだけで Typer ベースの CLI からパイプラインを実行でき、Wi-Fi 接続数や観光入込客数などのデータ取得・蓄積を自動化します。
 
-## データフロー概要
+## 何ができるか（最短 3 ステップ）
 
+1. 依存関係を用意
+
+    ```bash
+    uv sync
+    cp .env.example .env
+    ```
+
+2. データセット一覧を確認
+
+    ```bash
+    uv run python -m kawasaki_etl.main etl list
+    ```
+
+3. Wi-Fi 接続数パイプラインを実行
+
+    ```bash
+    uv run python -m kawasaki_etl.main etl run wifi_2020_count
+    ```
+
+## ETL アーキテクチャ概要
+
+```mermaid
+flowchart TD
+    A[configs/datasets.yml
+    dataset_id, URL, parser, category] --> B[Download
+    data/raw/<category>/<dataset_id>/]
+    B --> C[Normalize
+    data/normalized/<category>/<dataset_id>/]
+    C --> D[Load/Analyze
+    DB (configs/db.yml)
+    meta => data/meta/]
 ```
-configs/datasets.yml
-        |
-        v
-[Download]    -> data/raw/<category>/<dataset_id>/
-        |
-        v
-[Normalize]   -> data/normalized/<category>/<dataset_id>/
-        |
-        v
-[Load/Analyze] -> DB (configs/db.yml) + data/meta/ で処理履歴管理
-```
 
-データ配置はリポジトリ内の `data/` ディレクトリに整理済みで、クローン直後からパスが分かります（Git では無視されるため生データは追跡されません）。
+- `configs/datasets.yml` にパイプラインの入力（URL・形式・パーサー名など）を記述します。
+- `data/` 配下に raw/normalized/meta を自動生成し、ファイルのハッシュで再処理要否を判定します（Git では無視）。
+- CLI から `etl download`/`etl run`/`etl run-all` を叩くと、定義に基づき各ステップを順次実行します。
 
 ### Wi-Fi 接続数パイプライン
 
@@ -32,65 +54,43 @@ configs/datasets.yml
 
 主キーは `date` と `spot_id` の組み合わせで、2 回同じ CSV を流してもレコードは重複せず更新されます。
 
-## Features
+## 主な特徴
 
--   **Multiple Interface Types**: Support for CLI and REST API interfaces
--   **Flexible Configuration**: Environment-based configuration with `.env` file support
--   **Structured Logging**: Advanced logging with OpenTelemetry integration
--   **Modern Python**: Built with Python 3.13+ and modern tooling
--   **Comprehensive Testing**: Unit, API, and E2E test coverage
--   **Type Safety**: Full type hints with strict Pyright checking
--   **Code Quality**: Automated linting and formatting with Ruff
--   **Dependency Management**: Managed with uv for fast, reliable builds
+-   **ETL 向け CLI を標準搭載**: Typer 製の `etl download`/`etl run`/`etl run-all` が利用可能
+-   **設定駆動型**: YAML (`configs/datasets.yml`, `configs/db.yml`) のみでデータセットと DB を差し替え可能
+-   **メタ情報による冪等性**: `data/meta/` に処理履歴を残し、同じファイルはスキップ
+-   **型安全で近代的な Python**: Python 3.13、Ruff、Pyright、uv で統一
 
-## Project Structure
+## データディレクトリ構造
+
+```
+data/                           # Git で無視される動的データ
+├── raw/<category>/<dataset_id>/        # ダウンロードした生ファイル
+├── normalized/<category>/<dataset_id>/ # 文字コードや列名を正規化した CSV
+└── meta/<category>/<dataset_id>/       # 処理済みハッシュやタイムスタンプの JSON
+```
+
+`data/` はクローン直後からディレクトリのみが存在し、ファイルは ETL 実行時に生成されます。メタファイルのフォーマット詳細は [docs/meta_store.md](docs/meta_store.md) を参照してください。
+
+## プロジェクト構成
 
 ```
 kawasaki_etl/
-├── configs/                  # YAML-based configs (Git で管理)
-│   ├── datasets.yml          # データセット定義
-│   └── db.yml                # DB 接続テンプレート
-├── data/                     # 取得データ・正規化データ・メタ情報（Git ignore）
-│   ├── raw/
-│   ├── normalized/
-│   └── meta/
-├── src/kawasaki_etl/         # Main application code
-│   ├── __init__.py             # Package initialization
-│   ├── app.py                  # Application entry point
-│   ├── base.py                 # Base component class
-│   ├── main.py                 # CLI entry point with --dotenv support
-│   ├── types.py                # Type definitions
-│   ├── core/                   # ETL core (config loader, etc.)
-│   │   ├── __init__.py
-│   │   └── models.py
-│   ├── interfaces/             # Interface implementations
-│   │   ├── __init__.py
-│   │   ├── base.py            # Base interface class
-│   │   ├── cli.py             # CLI interface using Typer
-│   │   ├── factory.py         # Interface factory pattern
-│   │   └── restapi.py         # REST API interface using FastAPI
-│   ├── models/                 # Data models
-│   │   ├── __init__.py
-│   │   ├── api.py             # API response models
-│   │   └── io.py              # I/O models (e.g., WelcomeMessage)
-│   └── utils/                  # Utility modules
-│       ├── __init__.py
-│       ├── file_handler.py     # File handling utilities
-│       ├── logger.py           # Structured logging setup
-│       ├── otel_exporter.py    # (removed) OpenTelemetry exporter (removed for stability)
-│       └── settings.py         # Application settings
-├── tests/                       # Test suite
-│   ├── unit/                   # Unit tests
-│   ├── api/                    # API tests
-│   └── e2e/                    # End-to-end tests
-├── docs/                        # Documentation
-├── constraints/                 # Dependency constraints
-├── .env                        # Environment configuration (not in git)
-├── .env.example                # Example environment configuration
-├── pyproject.toml              # Project configuration
-├── noxfile.py                  # Task automation
-├── CLAUDE.md                   # AI assistant instructions
-└── README.md                   # This file
+├── configs/                     # Git 管理される設定
+│   ├── datasets.yml             # データセット定義（必須項目は docs/etl_overview.md を参照）
+│   └── db.yml                   # DB 接続情報テンプレート（ENV で上書き可能）
+├── src/kawasaki_etl/
+│   ├── main.py                  # エントリーポイント（--dotenv 対応）
+│   ├── interfaces/              # CLI/REST API 実装
+│   │   └── cli.py               # Typer 製 CLI。`etl` サブコマンドを提供
+│   ├── core/                    # 設定・IO・正規化・メタ情報
+│   └── pipelines/               # Wi-Fi などのデータセット固有パイプライン
+├── tests/                       # Unit/API/E2E テスト
+├── docs/                        # MkDocs ベースのドキュメント
+├── data/                        # raw/normalized/meta（Git ignore）
+├── mkdocs.yml                   # ドキュメントサイト設定
+├── pyproject.toml               # 依存・ツール設定
+└── README.md
 ```
 
 ## Quick Start
@@ -116,17 +116,26 @@ cp .env.example .env
 # Edit .env with your configuration
 ```
 
-### Running the Application
+### Running the Application (CLI)
 
 ```bash
-# Run with default settings (uses .env file)
-uv run python -m kawasaki_etl.main
-
-# Run with custom environment file
-uv run python -m kawasaki_etl.main --dotenv prod.env
-
-# Show help
+# CLI 全体のヘルプを表示
 uv run python -m kawasaki_etl.main --help
+
+# 登録済みデータセットの一覧を表示
+uv run python -m kawasaki_etl.main etl list
+
+# raw データだけダウンロード
+uv run python -m kawasaki_etl.main etl download wifi_2020_count
+
+# ETL を一括実行（download → normalize → load/meta）
+uv run python -m kawasaki_etl.main etl run wifi_2020_count
+
+# すべてのデータセットを順番に処理
+uv run python -m kawasaki_etl.main etl run-all
+
+# .env 以外の設定を使う場合
+uv run python -m kawasaki_etl.main --dotenv prod.env etl list
 ```
 
 ## Configuration
@@ -301,6 +310,8 @@ When enabled, logs can be exported to OpenTelemetry collectors:
 ```
 
 ## Documentation
+
+ETL の流れや datasets.yml の書き方は [docs/etl_overview.md](docs/etl_overview.md) にまとめています。
 
 ### Building Documentation
 

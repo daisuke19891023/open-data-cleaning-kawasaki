@@ -99,6 +99,10 @@
   - README だけでリポジトリの目的や CLI 実行手順が理解できる。
   - `uv run mkdocs build` が成功する。
 - **DoD**: グローバル DoD。README と docs の内容が実際の構造や CLI と矛盾していないこと。
+- **Status: DONE**
+  - README に ETL アーキテクチャ図、データディレクトリ構造、`etl` CLI の主要コマンドを追記し、クローン後の導線を整理。
+  - docs/etl_overview.md を追加し、datasets.yml の書き方・CLI 実行方法・パイプライン追加手順をまとめ、mkdocs.yml に登録。
+  - `uv run mkdocs build` でサイト生成を確認。
 
 ## 進め方の提案
 - 最初のスプリントで **T1〜T4 + T7** を完了して「ETL 基盤の骨格」を作る。
