@@ -42,6 +42,10 @@ nav:
       - MCP Interface: guides/mcp.md
       - Logging: guides/logging.md
       - Environment Variables: guides/environment.md
+  - Project Docs:
+      - Specification: spec.md
+      - Design: design.md
+      - Tasks: tasks.md
   - API Reference:
       - Overview: api/overview.md
       - Application: api/app.md
