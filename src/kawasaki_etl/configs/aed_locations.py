@@ -10,10 +10,10 @@ DATASET_ANCHOR_URL = f"{BASE_PAGE_URL}#opendata_dataset_15"
 AED_LOCATIONS_PAGE = OpenDataPage(
     identifier="aed_locations_r7_05",
     page_url=DATASET_ANCHOR_URL,
-    description="川崎市内のAED設置箇所一覧（2025年5月1日現在）",
+    description="川崎市内のAED設置箇所一覧(2025年5月1日現在)",
     resources=(
         OpenDataResource(
-            title="AED設置箇所一覧（2025年5月1日現在）",
+            title="AED設置箇所一覧(2025年5月1日現在)",
             url=urljoin(
                 BASE_PAGE_URL,
                 "../cmsfiles/contents/0000099/99784/250501opn.csv",

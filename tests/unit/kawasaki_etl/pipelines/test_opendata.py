@@ -5,14 +5,12 @@ from typing import TYPE_CHECKING
 import pytest
 
 from kawasaki_etl.configs import AED_LOCATIONS_PAGE, PHARMACY_PERMITS_PAGE
-from kawasaki_etl.models import OpenDataPage
 from kawasaki_etl.pipelines import opendata
 from kawasaki_etl.pipelines.opendata import download_opendata_page
 
 if TYPE_CHECKING:  # pragma: no cover
     from pathlib import Path
-
-    import pytest
+    from kawasaki_etl.models import OpenDataPage
 
 
 @pytest.mark.parametrize(
