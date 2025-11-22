@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import TYPE_CHECKING, Any, Self
+# pyright: reportUnknownMemberType=false, reportAttributeAccessIssue=false
 
-if TYPE_CHECKING:
-    from collections.abc import Mapping
+from collections.abc import Mapping
+from pathlib import Path
+from typing import Any, Self, cast
 
 import httpx
+
+HTTPClient = Any
+httpx = cast(Any, httpx)
+
+TimeoutType = float | None
 
 from kawasaki_etl.base import BaseComponent
 
@@ -18,9 +23,9 @@ class WebDataFetcher(BaseComponent):
 
     def __init__(
         self,
-        client: httpx.Client | None = None,
+        client: HTTPClient | None = None,
         *,
-        default_timeout: float | httpx.Timeout | None = 10.0,
+        default_timeout: TimeoutType = 10.0,
     ) -> None:
         """Initialize the fetcher.
 
@@ -31,23 +36,23 @@ class WebDataFetcher(BaseComponent):
 
         """
         super().__init__()
-        self._client = client or httpx.Client(
+        self._client: HTTPClient = client or httpx.Client(
             follow_redirects=True,
             timeout=default_timeout,
-        )
+        )  # type: ignore[reportAttributeAccessIssue]
         self._owns_client = client is None
-        self._default_timeout = default_timeout
+        self._default_timeout: TimeoutType = default_timeout
 
     def _resolve_timeout(
-        self, timeout: float | httpx.Timeout | None,
-    ) -> float | httpx.Timeout | None:
+        self, timeout: TimeoutType,
+    ) -> TimeoutType:
         return self._default_timeout if timeout is None else timeout
 
     def fetch_bytes(
         self,
         url: str,
         *,
-        timeout: float | httpx.Timeout | None = None,
+        timeout: TimeoutType = None,
         headers: Mapping[str, str] | None = None,
     ) -> bytes:
         """Return the raw bytes from a URL."""
@@ -67,7 +72,7 @@ class WebDataFetcher(BaseComponent):
         self,
         url: str,
         *,
-        timeout: float | httpx.Timeout | None = None,
+        timeout: TimeoutType = None,
         encoding: str | None = None,
         headers: Mapping[str, str] | None = None,
     ) -> str:
@@ -93,7 +98,7 @@ class WebDataFetcher(BaseComponent):
         self,
         url: str,
         *,
-        timeout: float | httpx.Timeout | None = None,
+        timeout: TimeoutType = None,
         headers: Mapping[str, str] | None = None,
     ) -> Any:
         """Return parsed JSON content from a URL."""
@@ -116,7 +121,7 @@ class WebDataFetcher(BaseComponent):
         destination: str | Path,
         *,
         chunk_size: int = 8192,
-        timeout: float | httpx.Timeout | None = None,
+        timeout: TimeoutType = None,
         headers: Mapping[str, str] | None = None,
     ) -> Path:
         """Stream a remote file directly to disk."""
@@ -176,7 +181,7 @@ class WebDataFetcher(BaseComponent):
 def fetch_json(
     url: str,
     *,
-    timeout: float | httpx.Timeout | None = 10.0,
+    timeout: TimeoutType = 10.0,
     headers: Mapping[str, str] | None = None,
 ) -> Any:
     """Fetch JSON content with a short-lived client."""

@@ -102,4 +102,7 @@ class TestSwaggerUIE2E:
         ui_content = ui_response.text.lower()
         assert "kawasaki etl api" in ui_content
         assert "enhanced documentation" in ui_content
-        assert str(schema_response.url).endswith("/api/v1/swagger-ui/schema")
+
+        response_url = getattr(schema_response, "url", None)
+        assert response_url is not None
+        assert str(response_url).endswith("/api/v1/swagger-ui/schema")
