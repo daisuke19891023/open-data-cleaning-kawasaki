@@ -56,6 +56,10 @@
   - 同じファイルに対する 2 回目の `etl run` で「既に処理済み」と判定され二重 INSERT が起きない。
   - ファイルを更新すると新しい SHA256 で再処理される。
 - **DoD**: グローバル DoD。メタファイル形式が README または docs に記載されていること。
+- **Status: DONE**
+  - core.meta_store を追加し、SHA256 計算・処理済み判定・メタファイル書き込みを実装。
+  - docs/meta_store.md と README に JSON 形式と保存パスを記載。
+  - テスト（`tests/unit/kawasaki_etl/core/test_meta_store.py`）でパス生成・ハッシュ算出・冪等判定を検証。
 
 ### T6. DB 接続 & UPSERT ロジック（core.db）の実装
 - **概要**: PostgreSQL(+PostGIS) 向け接続と DataFrame の UPSERT を実装し、`.env` または `configs/db.yml` から接続情報を取得する。
