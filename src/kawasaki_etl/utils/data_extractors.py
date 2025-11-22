@@ -5,7 +5,10 @@ from __future__ import annotations
 # pyright: reportUnknownMemberType=false
 
 from io import BytesIO
-from typing import Any, Callable, cast
+from typing import TYPE_CHECKING, Any, cast
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 import pandas as pd
 from pypdf import PdfReader
@@ -21,7 +24,7 @@ def extract_csv(
     """Parse CSV bytes into a DataFrame."""
     buffer = BytesIO(data)
     pd_read_csv: Callable[..., pd.DataFrame] = cast(  # type: ignore[assignment]
-        Callable[..., pd.DataFrame],
+        "Callable[..., pd.DataFrame]",
         pd.read_csv,
     )
     return pd_read_csv(buffer, encoding=encoding, **kwargs)
@@ -36,7 +39,7 @@ def extract_excel(
 ) -> pd.DataFrame:
     """Parse the specified Excel sheet into a DataFrame."""
     buffer = BytesIO(data)
-    return cast(pd.DataFrame, pd.read_excel(buffer, sheet_name=sheet_name, **kwargs))
+    return cast("pd.DataFrame", pd.read_excel(buffer, sheet_name=sheet_name, **kwargs))
 
 
 def extract_pdf_text(data: bytes, /) -> str:

@@ -4,18 +4,19 @@ from __future__ import annotations
 
 # pyright: reportUnknownMemberType=false, reportAttributeAccessIssue=false
 
-from collections.abc import Mapping
 from pathlib import Path
-from typing import Any, Self, cast
+from typing import TYPE_CHECKING, Any, Self, cast
 
 import httpx
+from kawasaki_etl.base import BaseComponent
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 HTTPClient = Any
-httpx = cast(Any, httpx)
+httpx = cast("Any", httpx)
 
 TimeoutType = float | None
-
-from kawasaki_etl.base import BaseComponent
 
 
 class WebDataFetcher(BaseComponent):
