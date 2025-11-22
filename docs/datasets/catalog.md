@@ -33,13 +33,13 @@
 | カテゴリ | データセット名/説明 | データセット URL | 形式 | dataset_id | ステータス | メモ |
 | --- | --- | --- | --- | --- | --- | --- |
 | 防災・防犯 | （例: 避難所一覧） | （レポートの URL を転記） | CSV 等 | （未設定なら空欄） | 未着手 |  |
-| 防災・防犯 | 【2022年度】応急給水拠点一覧（令和7年4月1日時点） | https://www.city.kawasaki.jp/800/page/0000085691.html#opendata_dataset_3 |  |  | 未着手 |  |
-| 防災・防犯 | 【2021年度】資料 | https://www.city.kawasaki.jp/601/page/0000036154.html#opendata_dataset_5 |  |  | 未着手 |  |
-| 防災・防犯 | 【2021年度】内水ハザードマップ（浸水想定区域）データ | https://www.city.kawasaki.jp/800/page/0000133400.html#opendata_dataset_3 |  |  | 未着手 |  |
-| 防災・防犯 | 【2015年度】消防署・出張所一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_3 |  |  | 未着手 |  |
-| 防災・防犯 | 【2015年度】消防団（器具置場）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_4 |  |  | 未着手 |  |
-| 防災・防犯 | 【2015年度】消火栓（公設）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_5 |  |  | 未着手 |  |
-| 防災・防犯 | 【2015年度】防火水槽（公設）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_6 |  |  | 未着手 |  |
+| 防災・防犯 | 【2022年度】応急給水拠点一覧（令和7年4月1日時点） | https://www.city.kawasaki.jp/800/page/0000085691.html#opendata_dataset_3 | CSV | emergency_water_points_r7_04 | 取り込み準備OK | `configs.disaster_prevention.WATER_SUPPLY_PAGE` を download_opendata_page で取得可能 |
+| 防災・防犯 | 【2021年度】資料 | https://www.city.kawasaki.jp/601/page/0000036154.html#opendata_dataset_5 | XLSX | designated_evacuation_sites_r3_08 | 取り込み準備OK | `configs.disaster_prevention.EVACUATION_PAGE` を download_opendata_page で取得可能 |
+| 防災・防犯 | 【2021年度】内水ハザードマップ（浸水想定区域）データ | https://www.city.kawasaki.jp/800/page/0000133400.html#opendata_dataset_3 | ZIP | internal_flood_hazard_map | 取り込み準備OK | `configs.disaster_prevention.HAZARD_PAGE` を download_opendata_page で取得可能 |
+| 防災・防犯 | 【2015年度】消防署・出張所一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_3 | CSV | fire_station_list_h27_10 | 取り込み準備OK | `configs.disaster_prevention.FIRE_STATION_PAGE` を download_opendata_page で取得可能 |
+| 防災・防犯 | 【2015年度】消防団（器具置場）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_4 | CSV | fire_brigade_storage_h27_10 | 取り込み準備OK | `configs.disaster_prevention.FIRE_EQUIPMENT_PAGE` を download_opendata_page で取得可能 |
+| 防災・防犯 | 【2015年度】消火栓（公設）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_5 | CSV | public_fire_hydrants_h27_10 | 取り込み準備OK | `configs.disaster_prevention.FIRE_HYDRANT_PAGE` を download_opendata_page で取得可能 |
+| 防災・防犯 | 【2015年度】防火水槽（公設）一覧 | https://www.city.kawasaki.jp/170/page/0000058746.html#opendata_dataset_6 | CSV | public_fire_cisterns_h27_10 | 取り込み準備OK | `configs.disaster_prevention.FIRE_CISTERN_PAGE` を download_opendata_page で取得可能 |
 | 医療・介護・福祉 | （例: 医療機関一覧） | （レポートの URL を転記） | CSV/Excel 等 | （未設定なら空欄） | 未着手 | 代表的なものを抜粋 |
 | … | … | … | … | … | … | … |
 
