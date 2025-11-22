@@ -88,6 +88,10 @@
   - `etl run tourism_r05_irikomi` が実行でき、PDF ダウンロードと正規化（モック含む）が動作する。
   - 未実装部分がある場合は CLI 上で「未実装」と分かるメッセージが出る。
 - **DoD**: グローバル DoD。PDF 抽出の仕様と今後の拡張方針が docs に記載されていること。
+- **Status: DONE**
+  - 観光入込客数向けの `tourism_r05_irikomi` を datasets.yml に追加し、ETL CLI から実行可能にした。
+  - `pdf_utils.extract_tables_from_tourism_irikomi` と観光パイプラインを実装し、未実装メッセージ付きのモック DataFrame を保存する挙動を用意。
+  - PDF 抽出の方針・モック手順を docs/guides/pdf_extraction.md に整理し、MkDocs ナビに追加。
 
 ### T10. リポジトリレベルのドキュメント整備
 - **概要**: README と docs を更新し、ETL フレームワークとしての使い方・構造を整理する。

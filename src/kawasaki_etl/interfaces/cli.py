@@ -17,8 +17,9 @@ from kawasaki_etl.core import (
     load_dataset_configs,
     get_engine,
 )
-from kawasaki_etl.pipelines import run_wifi_count
+from kawasaki_etl.pipelines import run_tourism_irikomi, run_wifi_count
 from kawasaki_etl.models.io import WelcomeMessage
+from kawasaki_etl.pipelines.tourism import TourismPipelineError
 from kawasaki_etl.pipelines.wifi import WifiPipelineError
 
 from .base import BaseInterface
@@ -169,6 +170,9 @@ class CLIInterface(BaseInterface):
         if dataset.category == "wifi" or dataset.parser == "wifi_usage_parser":
             run_wifi_count(dataset, engine=db_engine)
             return
+        if dataset.category == "tourism" or dataset.parser == "tourism_irikomi_pdf":
+            run_tourism_irikomi(dataset)
+            return
 
         msg = f"Unsupported dataset category: {dataset.category}"
         typer.secho(msg, err=True, fg=typer.colors.RED)
@@ -193,7 +197,7 @@ class CLIInterface(BaseInterface):
 
         try:
             self._run_pipeline(dataset)
-        except (WifiPipelineError, UpsertError) as exc:
+        except (WifiPipelineError, TourismPipelineError, UpsertError) as exc:
             typer.secho(str(exc), err=True, fg=typer.colors.RED)
             raise typer.Exit(code=1) from exc
 

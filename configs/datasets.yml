@@ -18,3 +18,14 @@ wifi_2020_count:
       spot_id: "スポットID"
       spot_name: "スポット名"
       connection_count: "接続数"
+
+tourism_r05_irikomi:
+  category: tourism
+  url: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+  type: pdf
+  parser: tourism_irikomi_pdf
+  table: tourism_visitors
+  key_fields: []
+  snapshot_date: 2023-12-31
+  extra:
+    notes: "観光入込客数（令和5年版）向けの PDF パイプライン（現状モック）"
