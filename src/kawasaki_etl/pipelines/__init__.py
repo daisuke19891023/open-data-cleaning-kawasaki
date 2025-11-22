@@ -1,6 +1,29 @@
 """Pipeline implementations for individual datasets."""
 
-from kawasaki_etl.pipelines.tourism import run_tourism_irikomi
-from kawasaki_etl.pipelines.wifi import run_wifi_count
+from __future__ import annotations
 
-__all__ = ["run_tourism_irikomi", "run_wifi_count"]
+from typing import TYPE_CHECKING
+
+__all__ = ["download_opendata_page", "run_tourism_irikomi", "run_wifi_count"]
+
+
+def __getattr__(name: str):  # pragma: no cover - thin lazy import wrapper
+    if name == "run_tourism_irikomi":
+        from kawasaki_etl.pipelines.tourism import run_tourism_irikomi
+
+        return run_tourism_irikomi
+    if name == "run_wifi_count":
+        from kawasaki_etl.pipelines.wifi import run_wifi_count
+
+        return run_wifi_count
+    if name == "download_opendata_page":
+        from kawasaki_etl.pipelines.opendata import download_opendata_page
+
+        return download_opendata_page
+    raise AttributeError(f"module {__name__!s} has no attribute {name!s}")
+
+
+if TYPE_CHECKING:  # pragma: no cover
+    from kawasaki_etl.pipelines.opendata import download_opendata_page
+    from kawasaki_etl.pipelines.tourism import run_tourism_irikomi
+    from kawasaki_etl.pipelines.wifi import run_wifi_count
