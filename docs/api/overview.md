@@ -1,10 +1,10 @@
 # API Reference Overview
 
-This section provides detailed API documentation for all Clean Interfaces modules and components.
+This section provides detailed API documentation for all Kawasaki ETL modules and components.
 
 ## Module Structure
 
-The Clean Interfaces package is organized into the following modules:
+The Kawasaki ETL package is organized into the following modules:
 
 ### Core Modules
 
@@ -37,16 +37,16 @@ The package provides convenient imports:
 
 ```python
 # Main application
-from clean_interfaces.app import Application, create_app, run_app
+from kawasaki_etl.app import Application, create_app, run_app
 
 # Base components
-from clean_interfaces.base import BaseComponent
+from kawasaki_etl.base import BaseComponent
 
 # Types
-from clean_interfaces.types import InterfaceType
+from kawasaki_etl.types import InterfaceType
 
 # Interfaces
-from clean_interfaces.interfaces import (
+from kawasaki_etl.interfaces import (
     BaseInterface,
     CLIInterface,
     RestAPIInterface,
@@ -54,17 +54,17 @@ from clean_interfaces.interfaces import (
 )
 
 # Models
-from clean_interfaces.models.api import (
+from kawasaki_etl.models.api import (
     HealthResponse,
     WelcomeResponse,
     ErrorResponse
 )
-from clean_interfaces.models.io import WelcomeMessage
+from kawasaki_etl.models.io import WelcomeMessage
 
 # Utilities
-from clean_interfaces.utils.file_handler import FileHandler
-from clean_interfaces.utils.logger import configure_logging, get_logger
-from clean_interfaces.utils.settings import (
+from kawasaki_etl.utils.file_handler import FileHandler
+from kawasaki_etl.utils.logger import configure_logging, get_logger
+from kawasaki_etl.utils.settings import (
     get_logging_settings,
     get_interface_settings
 )
@@ -106,7 +106,7 @@ class MyComponent(BaseComponent):
 Settings use Pydantic for validation and environment variable loading:
 
 ```python
-from clean_interfaces.utils.settings import get_logging_settings
+from kawasaki_etl.utils.settings import get_logging_settings
 
 settings = get_logging_settings()
 print(settings.log_level)  # From LOG_LEVEL env var

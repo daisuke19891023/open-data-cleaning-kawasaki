@@ -1,4 +1,4 @@
-clean_interfaces.interfaces
+kawasaki_etl.interfaces
 ===========================
 
 This module contains all interface implementations.
@@ -6,7 +6,7 @@ This module contains all interface implementations.
 Base Interface
 --------------
 
-.. automodule:: clean_interfaces.interfaces.base
+.. automodule:: kawasaki_etl.interfaces.base
    :members:
    :undoc-members:
    :show-inheritance:
@@ -14,7 +14,7 @@ Base Interface
 CLI Interface
 -------------
 
-.. automodule:: clean_interfaces.interfaces.cli
+.. automodule:: kawasaki_etl.interfaces.cli
    :members:
    :undoc-members:
    :show-inheritance:
@@ -22,7 +22,7 @@ CLI Interface
 REST API Interface
 ------------------
 
-.. automodule:: clean_interfaces.interfaces.restapi
+.. automodule:: kawasaki_etl.interfaces.restapi
    :members:
    :undoc-members:
    :show-inheritance:
@@ -30,7 +30,7 @@ REST API Interface
 Interface Factory
 -----------------
 
-.. automodule:: clean_interfaces.interfaces.factory
+.. automodule:: kawasaki_etl.interfaces.factory
    :members:
    :undoc-members:
    :show-inheritance:

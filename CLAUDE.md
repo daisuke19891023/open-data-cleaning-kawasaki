@@ -772,7 +772,7 @@ from tests.helpers.pexpect_debug import run_cli_with_debug, spawn_cli_with_debug
 # Simple command execution with debug output
 def test_cli_command(clean_env: dict[str, str]) -> None:
     output, exitstatus = run_cli_with_debug(
-        f"{sys.executable} -u -m clean_interfaces.main --help",
+        f"{sys.executable} -u -m kawasaki_etl.main --help",
         env=clean_env,
         timeout=10,
         debug=True,  # Enable debug output
@@ -782,7 +782,7 @@ def test_cli_command(clean_env: dict[str, str]) -> None:
 # Interactive session for complex testing
 def test_interactive_cli(clean_env: dict[str, str]) -> None:
     child = spawn_cli_with_debug(
-        f"{sys.executable} -u -m clean_interfaces.main",
+        f"{sys.executable} -u -m kawasaki_etl.main",
         env=clean_env,
         timeout=30,
         debug=True,
@@ -811,7 +811,7 @@ def test_interactive_cli(clean_env: dict[str, str]) -> None:
 #### Example Debug Output
 
 ```
-[DEBUG] Running command: /workspace/.venv/bin/python3 -u -m clean_interfaces.main
+[DEBUG] Running command: /workspace/.venv/bin/python3 -u -m kawasaki_etl.main
 [DEBUG] Environment: {'PATH': '...', 'LOG_LEVEL': 'ERROR', ...}
 [DEBUG] Timeout: 10s
 --------------------------------------------------------------------------------
@@ -819,7 +819,7 @@ def test_interactive_cli(clean_env: dict[str, str]) -> None:
 [DEBUG] Output length: 584 chars
 [DEBUG] Output:
 --------------------------------------------------------------------------------
-Welcome to Clean Interfaces!
+Welcome to Kawasaki ETL!
 Type --help for more information
 --------------------------------------------------------------------------------
 ```

@@ -1,7 +1,7 @@
-clean_interfaces.app
+kawasaki_etl.app
 ====================
 
-.. automodule:: clean_interfaces.app
+.. automodule:: kawasaki_etl.app
    :members:
    :undoc-members:
    :show-inheritance:
@@ -10,7 +10,7 @@ clean_interfaces.app
 Application Class
 -----------------
 
-.. autoclass:: clean_interfaces.app.Application
+.. autoclass:: kawasaki_etl.app.Application
    :members:
    :undoc-members:
    :show-inheritance:
@@ -19,4 +19,4 @@ Application Class
 Functions
 ---------
 
-.. autofunction:: clean_interfaces.app.run_app
+.. autofunction:: kawasaki_etl.app.run_app

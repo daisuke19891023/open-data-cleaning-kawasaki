@@ -174,18 +174,18 @@ if [ -d "utils" ]; then
     rm -rf utils
 
     success "utilsディレクトリが src/$LIBRARY_NAME/utils に移動されました"
-# Check for utils in test_project directory
-elif [ -d "src/test_project/utils" ]; then
-    info "test_project/utilsディレクトリをライブラリ配下に移動しています..."
+# Check for utils in clean_interfaces directory
+elif [ -d "src/clean_interfaces/utils" ]; then
+    info "clean_interfaces/utilsディレクトリをライブラリ配下に移動しています..."
 
     # Create utils directory in the library if it doesn't exist
     mkdir -p "src/$LIBRARY_NAME/utils"
 
     # Copy utils files to the library directory
-    cp -r src/test_project/utils/* "src/$LIBRARY_NAME/utils/"
+    cp -r src/clean_interfaces/utils/* "src/$LIBRARY_NAME/utils/"
 
     # Update import paths in utils files
-    find "src/$LIBRARY_NAME/utils" -type f -name "*.py" -exec sed -i "s/from test_project/from $LIBRARY_NAME/g; s/import test_project/import $LIBRARY_NAME/g" {} \;
+    find "src/$LIBRARY_NAME/utils" -type f -name "*.py" -exec sed -i "s/from clean_interfaces/from $LIBRARY_NAME/g; s/import clean_interfaces/import $LIBRARY_NAME/g" {} \;
 
     success "utilsディレクトリが src/$LIBRARY_NAME/utils に移動されました"
 else
@@ -224,9 +224,9 @@ if [ -d "tests/unit" ] && [ -f "tests/unit/test_logger.py" ]; then
     fi
 
     success "utilsテストファイルの移動と更新が完了しました"
-# Check for tests in test_project directory structure
-elif [ -d "tests/unit/test_project/utils" ] || [ -d "tests/e2e/test_project/utils" ]; then
-    info "test_project/utilsテストファイルをライブラリ配下に移動しています..."
+# Check for tests in clean_interfaces directory structure
+elif [ -d "tests/unit/clean_interfaces/utils" ] || [ -d "tests/e2e/clean_interfaces/utils" ]; then
+    info "clean_interfaces/utilsテストファイルをライブラリ配下に移動しています..."
 
     # Create tests directory structure in the library
     mkdir -p "tests/unit/$LIBRARY_NAME/utils"
@@ -235,18 +235,18 @@ elif [ -d "tests/unit/test_project/utils" ] || [ -d "tests/e2e/test_project/util
     touch "tests/e2e/$LIBRARY_NAME/__init__.py"
 
     # Move unit tests
-    if [ -d "tests/unit/test_project/utils" ]; then
-        cp -r tests/unit/test_project/utils/* "tests/unit/$LIBRARY_NAME/utils/"
+    if [ -d "tests/unit/clean_interfaces/utils" ]; then
+        cp -r tests/unit/clean_interfaces/utils/* "tests/unit/$LIBRARY_NAME/utils/"
         # Update import paths in test files
-        find "tests/unit/$LIBRARY_NAME/utils" -type f -name "*.py" -exec sed -i "s/from test_project/from $LIBRARY_NAME/g; s/import test_project/import $LIBRARY_NAME/g" {} \;
+        find "tests/unit/$LIBRARY_NAME/utils" -type f -name "*.py" -exec sed -i "s/from clean_interfaces/from $LIBRARY_NAME/g; s/import clean_interfaces/import $LIBRARY_NAME/g" {} \;
         success "unit testsが tests/unit/$LIBRARY_NAME/utils/ に移動されました"
     fi
 
     # Move e2e tests
-    if [ -d "tests/e2e/test_project/utils" ]; then
-        cp -r tests/e2e/test_project/utils/* "tests/e2e/$LIBRARY_NAME/utils/"
+    if [ -d "tests/e2e/clean_interfaces/utils" ]; then
+        cp -r tests/e2e/clean_interfaces/utils/* "tests/e2e/$LIBRARY_NAME/utils/"
         # Update import paths in test files
-        find "tests/e2e/$LIBRARY_NAME/utils" -type f -name "*.py" -exec sed -i "s/from test_project/from $LIBRARY_NAME/g; s/import test_project/import $LIBRARY_NAME/g" {} \;
+        find "tests/e2e/$LIBRARY_NAME/utils" -type f -name "*.py" -exec sed -i "s/from clean_interfaces/from $LIBRARY_NAME/g; s/import clean_interfaces/import $LIBRARY_NAME/g" {} \;
         success "e2e testsが tests/e2e/$LIBRARY_NAME/utils/ に移動されました"
     fi
 

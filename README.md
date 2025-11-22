@@ -1,4 +1,4 @@
-# Clean Interfaces
+# Kawasaki ETL
 
 A flexible Python application framework with multiple interface types and comprehensive logging support.
 
@@ -16,8 +16,8 @@ A flexible Python application framework with multiple interface types and compre
 ## Project Structure
 
 ```
-clean-interfaces/
-├── src/clean_interfaces/       # Main application code
+kawasaki_etl/
+├── src/kawasaki_etl/       # Main application code
 │   ├── __init__.py            # Package initialization
 │   ├── app.py                 # Application entry point
 │   ├── base.py                # Base component class
@@ -65,7 +65,7 @@ clean-interfaces/
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd clean-interfaces
+cd kawasaki_etl
 
 # Create virtual environment and install dependencies
 uv sync
@@ -80,13 +80,13 @@ cp .env.example .env
 
 ```bash
 # Run with default settings (uses .env file)
-uv run python -m clean_interfaces.main
+uv run python -m kawasaki_etl.main
 
 # Run with custom environment file
-uv run python -m clean_interfaces.main --dotenv prod.env
+uv run python -m kawasaki_etl.main --dotenv prod.env
 
 # Show help
-uv run python -m clean_interfaces.main --help
+uv run python -m kawasaki_etl.main --help
 ```
 
 ## Configuration
@@ -109,13 +109,13 @@ You can specify custom environment files using the `--dotenv` option:
 
 ```bash
 # Development environment
-uv run python -m clean_interfaces.main --dotenv dev.env
+uv run python -m kawasaki_etl.main --dotenv dev.env
 
 # Production environment
-uv run python -m clean_interfaces.main --dotenv prod.env
+uv run python -m kawasaki_etl.main --dotenv prod.env
 
 # Testing environment
-uv run python -m clean_interfaces.main --dotenv test.env
+uv run python -m kawasaki_etl.main --dotenv test.env
 ```
 
 ## Development
@@ -149,7 +149,7 @@ uv run pre-commit install
 nox -s test
 
 # Run specific test file
-uv run pytest tests/unit/clean_interfaces/test_app.py
+uv run pytest tests/unit/kawasaki_etl/test_app.py
 
 # Run with coverage
 uv run pytest --cov=src --cov-report=html
@@ -173,7 +173,7 @@ The default interface provides a command-line interface using Typer:
 
 ```bash
 # Run CLI interface
-INTERFACE_TYPE=cli uv run python -m clean_interfaces.main
+INTERFACE_TYPE=cli uv run python -m kawasaki_etl.main
 ```
 
 Features:
@@ -189,7 +189,7 @@ The REST API interface provides HTTP endpoints using FastAPI:
 
 ```bash
 # Run REST API interface
-INTERFACE_TYPE=restapi uv run python -m clean_interfaces.main
+INTERFACE_TYPE=restapi uv run python -m kawasaki_etl.main
 ```
 
 Features:
@@ -209,7 +209,7 @@ The application uses structured logging with multiple output formats:
 {
     "timestamp": "2025-07-20T10:30:45.123Z",
     "level": "info",
-    "logger": "clean_interfaces.app",
+    "logger": "kawasaki_etl.app",
     "message": "Application started",
     "interface": "cli"
 }
@@ -218,7 +218,7 @@ The application uses structured logging with multiple output formats:
 ### Console Format (Development)
 
 ```
-2025-07-20 10:30:45 [INFO] clean_interfaces.app: Application started interface=cli
+2025-07-20 10:30:45 [INFO] kawasaki_etl.app: Application started interface=cli
 ```
 
 ### OpenTelemetry Integration
@@ -307,7 +307,7 @@ from tests.helpers.pexpect_debug import run_cli_with_debug
 
 # Run with debug output enabled
 output, exitstatus = run_cli_with_debug(
-    "python -m clean_interfaces.main --help",
+    "python -m kawasaki_etl.main --help",
     env=clean_env,
     timeout=10,
     debug=True,  # Enable debug output

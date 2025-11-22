@@ -3,9 +3,9 @@
 import pytest
 from fastmcp import Client
 
-from clean_interfaces.interfaces.factory import InterfaceFactory
-from clean_interfaces.interfaces.mcp import MCPInterface
-from clean_interfaces.types import InterfaceType
+from kawasaki_etl.interfaces.factory import InterfaceFactory
+from kawasaki_etl.interfaces.mcp import MCPInterface
+from kawasaki_etl.types import InterfaceType
 
 
 class TestMCPInterfaceE2E:
@@ -25,5 +25,5 @@ class TestMCPInterfaceE2E:
         """Test that the welcome tool returns the correct message."""
         async with Client(mcp_interface.mcp) as client:
             result = await client.call_tool("welcome")
-            assert "Welcome to Clean Interfaces!" in str(result)
+            assert "Welcome to Kawasaki ETL!" in str(result)
             assert "Type --help for more information" in str(result)

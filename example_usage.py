@@ -3,8 +3,8 @@
 
 import os
 
-from test_project.utils.logger import setup_application_logging, shutdown_logging
-from test_project.utils.settings import get_settings, reset_settings
+from kawasaki_etl.utils.logger import setup_application_logging, shutdown_logging
+from kawasaki_etl.utils.settings import get_settings, reset_settings
 
 
 def example_basic_usage() -> None:

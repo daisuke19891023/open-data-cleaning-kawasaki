@@ -1,4 +1,4 @@
-"""Pytest configuration for test_project tests."""
+"""Pytest configuration for kawasaki_etl tests."""
 
 import json
 import tempfile

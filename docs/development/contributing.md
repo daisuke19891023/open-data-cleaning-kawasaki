@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for considering contributing to Clean Interfaces! This guide will help you get started.
+Thank you for considering contributing to Kawasaki ETL! This guide will help you get started.
 
 ## Getting Started
 
@@ -15,8 +15,8 @@ Thank you for considering contributing to Clean Interfaces! This guide will help
 1. **Fork and clone the repository**
 
 ```bash
-git clone https://github.com/your-username/clean-interfaces.git
-cd clean-interfaces
+git clone https://github.com/your-username/kawasaki_etl.git
+cd kawasaki_etl
 ```
 
 2. **Run the setup script**

@@ -1,5 +1,5 @@
 {
-  "name": "clean-interfaces",
+  "name": "kawasaki_etl",
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."

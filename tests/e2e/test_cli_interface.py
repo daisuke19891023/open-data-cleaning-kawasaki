@@ -20,21 +20,21 @@ class TestCLIInterfaceE2E:
         """Test that CLI displays welcome message on startup."""
         # Run the CLI command
         result = subprocess.run(  # noqa: S603
-            [sys.executable, "-m", "clean_interfaces.main"],
+            [sys.executable, "-m", "kawasaki_etl.main"],
             capture_output=True,
             text=True,
             check=False,
         )
 
         assert result.returncode == 0
-        assert "Welcome to Clean Interfaces!" in result.stdout
+        assert "Welcome to Kawasaki ETL!" in result.stdout
         assert "Type --help for more information" in result.stdout
 
     def test_cli_help_command(self) -> None:
         """Test that CLI displays help message with --help flag."""
         # Run the CLI command with --help
         result = subprocess.run(  # noqa: S603
-            [sys.executable, "-m", "clean_interfaces.main", "--help"],
+            [sys.executable, "-m", "kawasaki_etl.main", "--help"],
             capture_output=True,
             text=True,
             check=False,
@@ -53,11 +53,11 @@ class TestCLIInterfaceE2E:
         monkeypatch.setenv("INTERFACE_TYPE", "cli")
 
         result = subprocess.run(  # noqa: S603
-            [sys.executable, "-m", "clean_interfaces.main"],
+            [sys.executable, "-m", "kawasaki_etl.main"],
             capture_output=True,
             text=True,
             check=False,
         )
 
         assert result.returncode == 0
-        assert "Welcome to Clean Interfaces!" in result.stdout
+        assert "Welcome to Kawasaki ETL!" in result.stdout

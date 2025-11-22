@@ -1,15 +1,15 @@
 Development Guide
 =================
 
-This guide covers development setup and contribution guidelines for Clean Interfaces.
+This guide covers development setup and contribution guidelines for Kawasaki ETL.
 
 Development Setup
 -----------------
 
 1. Clone the repository::
 
-    git clone https://github.com/your-username/clean-interfaces.git
-    cd clean-interfaces
+    git clone https://github.com/your-username/kawasaki_etl.git
+    cd kawasaki_etl
 
 2. Install development dependencies::
 

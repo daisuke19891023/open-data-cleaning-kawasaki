@@ -1,7 +1,7 @@
-clean_interfaces.base
+kawasaki_etl.base
 =====================
 
-.. automodule:: clean_interfaces.base
+.. automodule:: kawasaki_etl.base
    :members:
    :undoc-members:
    :show-inheritance:
