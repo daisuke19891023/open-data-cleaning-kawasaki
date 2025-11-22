@@ -307,7 +307,7 @@ pyproject-hooks==1.2.0
     # via pdm
 pyright==1.1.405
     # via kawasaki_etl (pyproject.toml)
-pytest==8.4.2
+pytest==9.0.1
     # via
     #   kawasaki_etl (pyproject.toml)
     #   pytest-cov
