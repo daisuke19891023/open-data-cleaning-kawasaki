@@ -98,6 +98,7 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
         raise WifiPipelineError(msg)
 
     processed: DataFrame = renamed.copy()
+    # Normalize Series typing for downstream datetime/astype operations
     date_raw: Series = cast("Series", processed.loc[:, "date"])
     date_series: Series = pd.to_datetime(  # pyright: ignore[reportUnknownMemberType]
         date_raw,
