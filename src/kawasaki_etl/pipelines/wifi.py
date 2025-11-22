@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 import pandas as pd
-from pandas import Series
+from pandas import DataFrame, Series
 
 from kawasaki_etl.core import (
     DatasetConfig,
@@ -24,8 +24,6 @@ from kawasaki_etl.utils.logger import LoggerProtocol, get_logger
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from sqlalchemy.engine import Engine
-
-DataFrame = pd.DataFrame
 
 NORMALIZED_DATA_DIR = Path("data/normalized")
 DEFAULT_TABLE_NAME = "wifi_access_counts"
@@ -48,10 +46,8 @@ class WifiPipelineError(Exception):
 def _resolve_column_name(  # pyright: ignore[reportUnknownArgumentType,reportUnknownVariableType,reportUnknownMemberType]
     df: DataFrame, target: str, candidates: Iterable[str],
 ) -> str:
-    column_names: list[str] = [
-        str(col)
-        for col in df.columns.to_list()  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportUnknownArgumentType]
-    ]
+    columns_raw = cast("list[str]", df.columns.to_list())
+    column_names: list[str] = [str(col) for col in columns_raw]
     normalized_columns: dict[str, str] = {}
     for name in column_names:
         normalized_key: str = normalize_column_name(name).lower()  # pyright: ignore[reportUnknownArgumentType]
@@ -100,7 +96,7 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
         msg = f"Missing required columns after renaming: {missing}"
         raise WifiPipelineError(msg)
 
-    processed = renamed.copy()
+    processed: DataFrame = renamed.copy()
     date_raw: Series = cast("Series", processed["date"])
     date_series: Series = pd.to_datetime(  # pyright: ignore[reportUnknownMemberType]
         date_raw,
@@ -114,11 +110,14 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
     connection_raw: Series = cast("Series", processed["connection_count"])
     connection_series: Series = cast(
         "Series",
-        pd.to_numeric(connection_raw, errors="coerce"),  # pyright: ignore[reportUnknownMemberType]
+        pd.to_numeric(  # pyright: ignore[reportUnknownMemberType]
+            connection_raw,
+            errors="coerce",
+        ),
     )
     processed["connection_count"] = connection_series.fillna(0)  # pyright: ignore[reportUnknownMemberType]
 
-    processed = processed.dropna(subset=["date", "spot_id"])
+    processed = processed.dropna(subset=["date", "spot_id"])  # pyright: ignore[reportUnknownMemberType]
 
     if config.snapshot_date:
         processed["snapshot_date"] = config.snapshot_date
