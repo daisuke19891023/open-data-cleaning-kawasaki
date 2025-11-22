@@ -13,22 +13,18 @@ if TYPE_CHECKING:  # pragma: no cover
     from kawasaki_etl.models import OpenDataPage
 
 
-@pytest.mark.parametrize(
-    "page",
-    [PHARMACY_PERMITS_PAGE, AED_LOCATIONS_PAGE],
-    ids=lambda page: page.identifier,
-)
+PAGES = [PHARMACY_PERMITS_PAGE, AED_LOCATIONS_PAGE]
+PAGE_IDS = [page.identifier for page in PAGES]
+
+
+@pytest.mark.parametrize("page", PAGES, ids=PAGE_IDS)
 def test_config_has_absolute_urls(page: OpenDataPage) -> None:
     """すべてのリソースURLが絶対パスであることを確認する."""
     urls = [resource.url for resource in page.resources]
     assert all(url.startswith("http") for url in urls)
 
 
-@pytest.mark.parametrize(
-    "page",
-    [PHARMACY_PERMITS_PAGE, AED_LOCATIONS_PAGE],
-    ids=lambda page: page.identifier,
-)
+@pytest.mark.parametrize("page", PAGES, ids=PAGE_IDS)
 def test_download_opendata_page(
     page: OpenDataPage,
     monkeypatch: pytest.MonkeyPatch,

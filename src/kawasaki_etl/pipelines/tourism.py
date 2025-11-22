@@ -3,6 +3,8 @@ from __future__ import annotations
 import datetime
 from pathlib import Path
 
+from typing import TYPE_CHECKING
+
 
 from kawasaki_etl.core import (
     DatasetConfig,
@@ -17,6 +19,9 @@ from kawasaki_etl.core.pdf_utils import (
     extract_tables_from_tourism_irikomi,
 )
 from kawasaki_etl.utils.logger import LoggerProtocol, get_logger
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 NORMALIZED_DATA_DIR = Path("data/normalized")
@@ -53,9 +58,10 @@ def run_tourism_irikomi(config: DatasetConfig) -> Path:
                 normalized_path=str(normalized_path),
             )
         else:
-            extracted = extract_tables_from_tourism_irikomi(raw_path)
+            extracted: pd.DataFrame = extract_tables_from_tourism_irikomi(raw_path)
             normalized_path = _normalized_path(config, raw_path)
-            extracted.to_csv(normalized_path, index=False)
+            normalized_path_str = str(normalized_path)
+            extracted.to_csv(normalized_path_str, index=False)  # pyright: ignore[reportUnknownMemberType]
 
             mark_loaded(
                 config,

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-from pandas.testing import assert_frame_equal
+from pandas.testing import assert_frame_equal  # pyright: ignore[reportUnknownVariableType]
 
 from kawasaki_etl.core.models import DatasetConfig
 from kawasaki_etl.core.pdf_utils import extract_tables_from_tourism_irikomi
@@ -14,10 +14,13 @@ def test_extract_tables_returns_placeholder_when_no_mock(tmp_path: Path) -> None
     pdf_path = tmp_path / "sample.pdf"
     pdf_path.write_text("dummy pdf content", encoding="utf-8")
 
-    df = extract_tables_from_tourism_irikomi(pdf_path)
+    df: pd.DataFrame = extract_tables_from_tourism_irikomi(pdf_path)
 
     assert "message" in df.columns
-    assert any(df["message"].str.contains("未実装", na=False))
+    messages: list[str] = [
+        str(message) for message in df["message"]  # pyright: ignore[reportUnknownVariableType,reportUnknownArgumentType]
+    ]
+    assert any("未実装" in message for message in messages)
 
 
 def test_run_tourism_irikomi_saves_csv(
@@ -38,7 +41,7 @@ def test_run_tourism_irikomi_saves_csv(
     normalized_dir = tmp_path / "normalized"
     meta_path = tmp_path / "meta.json"
 
-    sample_df = pd.DataFrame({"col": [1, 2, 3]})
+    sample_df: pd.DataFrame = pd.DataFrame({"col": [1, 2, 3]})
 
     def _download_if_needed(_: DatasetConfig) -> Path:
         return raw_pdf
@@ -65,5 +68,5 @@ def test_run_tourism_irikomi_saves_csv(
     normalized_path = tourism.run_tourism_irikomi(dataset)
 
     assert normalized_path.exists()
-    loaded_df = pd.read_csv(normalized_path)  # pyright: ignore[reportUnknownMemberType]
+    loaded_df: pd.DataFrame = pd.read_csv(str(normalized_path))  # pyright: ignore[reportUnknownMemberType]
     assert_frame_equal(loaded_df, sample_df)
