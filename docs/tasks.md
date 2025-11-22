@@ -16,6 +16,10 @@
   - README を読めばデータ配置が把握でき、`data/` 配下が Git で無視される。
   - `configs/datasets.yml` にサンプルエントリがあり構造が分かる。
 - **DoD**: グローバル DoD を満たし、README に目的と構造が反映されていること。
+- **Status: DONE**
+  - README 冒頭に川崎市オープンデータ ETL の目的とデータフローを追記し、`configs/`/`data/` の構造を明示。
+  - `configs/datasets.yml`/`configs/db.yml` を追加し、`data/` 配下に raw/normalized/meta をプリセット化。
+  - `.gitignore` で `data/` を無視しつつ `.gitkeep` を除外対象外にし、クローン直後からパスが把握可能にした。
 
 ### T2. DatasetConfig モデルと設定ローダーの実装
 - **概要**: `configs/datasets.yml` を読み込んで内部モデルに変換する仕組み (`core/models.py`) を実装する。
@@ -23,6 +27,10 @@
   - `python -m kawasaki_etl.main debug list-datasets` で ID 一覧が表示される。
   - 不正ケースでは CLI 上に分かりやすいエラーが出る。
 - **DoD**: グローバル DoD。`tests/unit/core/test_models_or_config_loader.py` に YAML モックを使ったテストがあること。
+- **Status: DONE**
+  - `DatasetConfig`/`load_dataset_configs`/`get_dataset_config` を追加し、YAML 構造エラーや ID 不在時の例外を明示化。
+  - Typer CLI に `debug list-datasets` を追加し、設定一覧表示と読み込み失敗時の分かりやすいメッセージを実装。
+  - `tests/unit/kawasaki_etl/core/test_models_or_config_loader.py` と CLI 向けテストで正常/異常系をカバー。
 
 ### T3. ダウンロード & パス管理（core.io）の実装
 - **概要**: `data/raw/{category}/{dataset_id}/` へのダウンロードと冪等性を担保する共通関数 `download_if_needed()` を実装する。

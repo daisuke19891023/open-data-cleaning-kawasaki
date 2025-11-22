@@ -1,0 +1,15 @@
+# 川崎市オープンデータ向けデータセット定義のサンプル
+# dataset_id: データセット識別子。CLI での指定に使います。
+wifi_2020_count:
+  category: connectivity
+  url: https://opendata.example.kawasaki.jp/wifi/count_2020.csv
+  type: csv
+  parser: wifi_usage_parser
+  table: wifi_connection_counts
+  key_fields:
+    - date
+    - spot_id
+  snapshot_date: 2020-12-31
+  extra:
+    encoding: utf-8
+    notes: "市内 Wi-Fi スポット利用数"
