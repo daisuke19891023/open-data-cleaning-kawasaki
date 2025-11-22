@@ -181,3 +181,13 @@ htmlcov/
 # --- OS -----------------------------------------------------
 .DS_Store
 Thumbs.db
+
+# --- Data storage -------------------------------------------
+data/*
+!data/.gitkeep
+!data/raw/
+!data/raw/.gitkeep
+!data/normalized/
+!data/normalized/.gitkeep
+!data/meta/
+!data/meta/.gitkeep

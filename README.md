@@ -1,6 +1,23 @@
 # Kawasaki ETL
 
-A flexible Python application framework with multiple interface types and comprehensive logging support.
+川崎市オープンデータの収集・正規化・格納を行う ETL & 解析基盤です。`configs/datasets.yml` にデータセット定義を記述すると、CLI からダウンロード/正規化/DB 連携のパイプラインを順次拡張できる構成になっています。
+
+## データフロー概要
+
+```
+configs/datasets.yml
+        |
+        v
+[Download]    -> data/raw/<category>/<dataset_id>/
+        |
+        v
+[Normalize]   -> data/normalized/<category>/<dataset_id>/
+        |
+        v
+[Load/Analyze] -> DB (configs/db.yml) + data/meta/ で処理履歴管理
+```
+
+データ配置はリポジトリ内の `data/` ディレクトリに整理済みで、クローン直後からパスが分かります（Git では無視されるため生データは追跡されません）。
 
 ## Features
 
@@ -17,40 +34,50 @@ A flexible Python application framework with multiple interface types and compre
 
 ```
 kawasaki_etl/
-├── src/kawasaki_etl/       # Main application code
-│   ├── __init__.py            # Package initialization
-│   ├── app.py                 # Application entry point
-│   ├── base.py                # Base component class
-│   ├── main.py                # CLI entry point with --dotenv support
-│   ├── types.py               # Type definitions
-│   ├── interfaces/            # Interface implementations
+├── configs/                  # YAML-based configs (Git で管理)
+│   ├── datasets.yml          # データセット定義
+│   └── db.yml                # DB 接続テンプレート
+├── data/                     # 取得データ・正規化データ・メタ情報（Git ignore）
+│   ├── raw/
+│   ├── normalized/
+│   └── meta/
+├── src/kawasaki_etl/         # Main application code
+│   ├── __init__.py             # Package initialization
+│   ├── app.py                  # Application entry point
+│   ├── base.py                 # Base component class
+│   ├── main.py                 # CLI entry point with --dotenv support
+│   ├── types.py                # Type definitions
+│   ├── core/                   # ETL core (config loader, etc.)
 │   │   ├── __init__.py
-│   │   ├── base.py           # Base interface class
-│   │   ├── cli.py            # CLI interface using Typer
-│   │   ├── factory.py        # Interface factory pattern
-│   │   └── restapi.py        # REST API interface using FastAPI
-│   ├── models/                # Data models
+│   │   └── models.py
+│   ├── interfaces/             # Interface implementations
 │   │   ├── __init__.py
-│   │   ├── api.py            # API response models
-│   │   └── io.py             # I/O models (e.g., WelcomeMessage)
-│   └── utils/                 # Utility modules
+│   │   ├── base.py            # Base interface class
+│   │   ├── cli.py             # CLI interface using Typer
+│   │   ├── factory.py         # Interface factory pattern
+│   │   └── restapi.py         # REST API interface using FastAPI
+│   ├── models/                 # Data models
+│   │   ├── __init__.py
+│   │   ├── api.py             # API response models
+│   │   └── io.py              # I/O models (e.g., WelcomeMessage)
+│   └── utils/                  # Utility modules
 │       ├── __init__.py
-│       ├── file_handler.py    # File handling utilities
-│       ├── logger.py          # Structured logging setup
-│       ├── otel_exporter.py   # (removed) OpenTelemetry exporter (removed for stability)
-│       └── settings.py        # Application settings
-├── tests/                      # Test suite
-│   ├── unit/                  # Unit tests
-│   ├── api/                   # API tests
-│   └── e2e/                   # End-to-end tests
-├── docs/                       # Documentation
-├── constraints/                # Dependency constraints
-├── .env                       # Environment configuration (not in git)
-├── .env.example               # Example environment configuration
-├── pyproject.toml             # Project configuration
-├── noxfile.py                 # Task automation
-├── CLAUDE.md                  # AI assistant instructions
-└── README.md                  # This file
+│       ├── file_handler.py     # File handling utilities
+│       ├── logger.py           # Structured logging setup
+│       ├── otel_exporter.py    # (removed) OpenTelemetry exporter (removed for stability)
+│       └── settings.py         # Application settings
+├── tests/                       # Test suite
+│   ├── unit/                   # Unit tests
+│   ├── api/                    # API tests
+│   └── e2e/                    # End-to-end tests
+├── docs/                        # Documentation
+├── constraints/                 # Dependency constraints
+├── .env                        # Environment configuration (not in git)
+├── .env.example                # Example environment configuration
+├── pyproject.toml              # Project configuration
+├── noxfile.py                  # Task automation
+├── CLAUDE.md                   # AI assistant instructions
+└── README.md                   # This file
 ```
 
 ## Quick Start
@@ -90,6 +117,27 @@ uv run python -m kawasaki_etl.main --help
 ```
 
 ## Configuration
+
+### Dataset definitions (configs/datasets.yml)
+
+`configs/datasets.yml` ではデータセットごとにカテゴリー、URL、形式、処理用パーサー名などを宣言します。サンプル:
+
+```yaml
+wifi_2020_count:
+  category: connectivity
+  url: https://opendata.example.kawasaki.jp/wifi/count_2020.csv
+  type: csv
+  parser: wifi_usage_parser
+  table: wifi_connection_counts
+  key_fields:
+    - date
+    - spot_id
+  snapshot_date: 2020-12-31
+  extra:
+    encoding: utf-8
+```
+
+取得したデータは `data/raw/<category>/<dataset_id>/`, 正規化後は `data/normalized/...`, メタ情報は `data/meta/` に配置します。`data/` 配下は `.gitignore` により追跡対象外です。
 
 ### Environment Variables
 

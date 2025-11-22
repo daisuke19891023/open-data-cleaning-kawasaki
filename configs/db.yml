@@ -1,0 +1,6 @@
+# DB 接続設定のテンプレート
+# host: localhost
+# port: 5432
+# user: kawasaki_etl
+# password: changeme
+# database: kawasaki_opendata
