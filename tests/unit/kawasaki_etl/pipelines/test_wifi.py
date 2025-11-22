@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from sqlalchemy import Column, Integer, MetaData, String, Table, create_engine, text
+from sqlalchemy.engine import Engine
 
 from kawasaki_etl.core.models import DatasetConfig
 from kawasaki_etl.pipelines import wifi
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
 
 
 @pytest.fixture
-def sqlite_engine() -> object:
+def sqlite_engine() -> Engine:
     """SQLite 上の簡易テーブルを作る."""
     engine = create_engine("sqlite+pysqlite:///:memory:")
     metadata = MetaData()
@@ -62,7 +63,7 @@ def _build_dataset() -> DatasetConfig:
 def test_run_wifi_count_upserts(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
-    sqlite_engine: object,
+    sqlite_engine: Engine,
 ) -> None:
     """同じキーの行が UPSERT されることを確認する."""
     raw_path = tmp_path / "raw.csv"
@@ -74,10 +75,23 @@ def test_run_wifi_count_upserts(
     dataset = _build_dataset()
 
     monkeypatch.setattr(wifi, "NORMALIZED_DATA_DIR", tmp_path / "normalized")
-    monkeypatch.setattr(wifi, "download_if_needed", lambda _cfg: raw_path)
-    monkeypatch.setattr(wifi, "calculate_sha256", lambda _p: "dummy-hash")
-    monkeypatch.setattr(wifi, "is_already_loaded", lambda *_args, **_kwargs: False)
-    monkeypatch.setattr(wifi, "mark_loaded", lambda *_args, **_kwargs: None)
+
+    def _download(_cfg: DatasetConfig) -> Path:
+        return raw_path
+
+    def _calculate_hash(_p: Path) -> str:
+        return "dummy-hash"
+
+    def _is_loaded(*_args: object, **_kwargs: object) -> bool:
+        return False
+
+    def _mark_loaded(*_args: object, **_kwargs: object) -> None:
+        return None
+
+    monkeypatch.setattr(wifi, "download_if_needed", _download)
+    monkeypatch.setattr(wifi, "calculate_sha256", _calculate_hash)
+    monkeypatch.setattr(wifi, "is_already_loaded", _is_loaded)
+    monkeypatch.setattr(wifi, "mark_loaded", _mark_loaded)
 
     wifi.run_wifi_count(dataset, engine=sqlite_engine)
 
@@ -99,7 +113,7 @@ def test_run_wifi_count_upserts(
         encoding="utf-8",
     )
 
-    monkeypatch.setattr(wifi, "is_already_loaded", lambda *_args, **_kwargs: False)
+    monkeypatch.setattr(wifi, "is_already_loaded", _is_loaded)
     wifi.run_wifi_count(dataset, engine=sqlite_engine)
 
     with sqlite_engine.connect() as conn:
@@ -115,7 +129,7 @@ def test_run_wifi_count_upserts(
 def test_run_wifi_count_skips_when_already_loaded(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
-    sqlite_engine: object,
+    sqlite_engine: Engine,
 ) -> None:
     """meta_store が既処理を示す場合は処理しない."""
     raw_path = tmp_path / "raw.csv"
@@ -127,15 +141,25 @@ def test_run_wifi_count_skips_when_already_loaded(
     dataset = _build_dataset()
 
     monkeypatch.setattr(wifi, "NORMALIZED_DATA_DIR", tmp_path / "normalized")
-    monkeypatch.setattr(wifi, "download_if_needed", lambda _cfg: raw_path)
-    monkeypatch.setattr(wifi, "calculate_sha256", lambda _p: "dummy-hash")
-    monkeypatch.setattr(wifi, "is_already_loaded", lambda *_args, **_kwargs: True)
+
+    def _download(_cfg: DatasetConfig) -> Path:
+        return raw_path
+
+    def _calculate_hash(_p: Path) -> str:
+        return "dummy-hash"
+
     marker_called: list[bool] = []
-    monkeypatch.setattr(
-        wifi,
-        "mark_loaded",
-        lambda *_args, **_kwargs: marker_called.append(True),
-    )
+
+    def _is_loaded(*_args: object, **_kwargs: object) -> bool:
+        return True
+
+    def _mark_loaded(*_args: object, **_kwargs: object) -> None:
+        marker_called.append(True)
+
+    monkeypatch.setattr(wifi, "download_if_needed", _download)
+    monkeypatch.setattr(wifi, "calculate_sha256", _calculate_hash)
+    monkeypatch.setattr(wifi, "is_already_loaded", _is_loaded)
+    monkeypatch.setattr(wifi, "mark_loaded", _mark_loaded)
 
     wifi.run_wifi_count(dataset, engine=sqlite_engine)
 

@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Iterable, cast
 
 import pandas as pd
+from pandas import Series
 
 from kawasaki_etl.core import (
     DatasetConfig,
@@ -43,12 +44,18 @@ class WifiPipelineError(Exception):
     """Raised when Wi-Fi pipeline fails."""
 
 
-def _resolve_column_name(df: DataFrame, target: str, candidates: list[str]) -> str:
-    normalized_columns = {
-        normalize_column_name(col).lower(): col for col in df.columns.to_list()
-    }
+def _resolve_column_name(  # pyright: ignore[reportUnknownArgumentType,reportUnknownVariableType,reportUnknownMemberType]
+    df: DataFrame, target: str, candidates: Iterable[str]
+) -> str:
+    column_names: list[str] = []
+    for col in df.columns.to_list():  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportUnknownArgumentType]
+        column_names.append(str(col))  # pyright: ignore[reportUnknownArgumentType]
+    normalized_columns: dict[str, str] = {}
+    for name in column_names:
+        normalized_key: str = normalize_column_name(name).lower()  # pyright: ignore[reportUnknownArgumentType]
+        normalized_columns[normalized_key] = name
     for candidate in candidates:
-        key = normalize_column_name(candidate).lower()
+        key = normalize_column_name(str(candidate)).lower()
         if key in normalized_columns:
             return normalized_columns[key]
 
@@ -57,16 +64,19 @@ def _resolve_column_name(df: DataFrame, target: str, candidates: list[str]) -> s
 
 
 def _rename_wifi_columns(df: DataFrame, config: DatasetConfig) -> DataFrame:
-    column_mapping: dict[str, Any] = config.extra.get("column_mapping", {})
+    column_mapping_raw = config.extra.get("column_mapping", {})
+    column_mapping: dict[str, list[str] | str] = cast(
+        dict[str, list[str] | str], column_mapping_raw
+    )
     resolved: dict[str, str] = {}
 
     for logical_name, default_candidates in DEFAULT_COLUMN_CANDIDATES.items():
         custom_candidates_raw = column_mapping.get(logical_name)
         if custom_candidates_raw is None:
-            candidates = default_candidates
+            candidates: list[str] = default_candidates
         elif isinstance(custom_candidates_raw, str):
             candidates = [custom_candidates_raw]
-        elif isinstance(custom_candidates_raw, list):
+        elif isinstance(custom_candidates_raw, list):  # pyright: ignore[reportUnnecessaryIsInstance]
             candidates = [str(item) for item in custom_candidates_raw]
         else:
             msg = f"column_mapping for '{logical_name}' must be string or list"
@@ -88,11 +98,20 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
         raise WifiPipelineError(msg)
 
     processed = renamed.copy()
-    processed["date"] = pd.to_datetime(processed["date"], errors="coerce").dt.date
-    processed["spot_id"] = processed["spot_id"].astype(str)
-    processed["connection_count"] = pd.to_numeric(
-        processed["connection_count"], errors="coerce",
-    ).fillna(0)
+    date_raw: Series = cast("Series", processed["date"])
+    date_series: Series = pd.to_datetime(  # pyright: ignore[reportUnknownMemberType]
+        date_raw, errors="coerce"
+    )
+    processed["date"] = date_series.dt.date  # pyright: ignore[reportUnknownMemberType]
+
+    spot_id_raw: Series = cast(Series, processed["spot_id"])
+    processed["spot_id"] = spot_id_raw.astype(str)  # pyright: ignore[reportUnknownMemberType]
+
+    connection_raw: Series = cast(Series, processed["connection_count"])
+    connection_series: Series = cast(
+        Series, pd.to_numeric(connection_raw, errors="coerce")  # pyright: ignore[reportUnknownMemberType]
+    )
+    processed["connection_count"] = connection_series.fillna(0)  # pyright: ignore[reportUnknownMemberType]
 
     processed = processed.dropna(subset=["date", "spot_id"])
 
@@ -109,9 +128,11 @@ def _prepare_wifi_dataframe(df: DataFrame, config: DatasetConfig) -> DataFrame:
         "connection_count",
         "snapshot_date",
     ]
-    for col in list(processed.columns):
-        if col not in keep_columns:
-            processed = processed.drop(columns=[col])
+    extra_columns: list[str] = [
+        str(col) for col in processed.columns if str(col) not in keep_columns  # pyright: ignore[reportUnknownArgumentType,reportUnknownVariableType]
+    ]
+    if extra_columns:
+        processed = processed.drop(columns=extra_columns)
 
     return processed
 

@@ -3,16 +3,20 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Mapping, cast
+
+from pandas import DataFrame
 import yaml
 from sqlalchemy import MetaData, Table, create_engine, text
+from sqlalchemy.dialects.postgresql import Insert as PGInsert
 from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy.dialects.sqlite import Insert as SQLiteInsert
 from sqlalchemy.exc import SQLAlchemyError
 
 from kawasaki_etl.utils.logger import LoggerProtocol, get_logger
 
 if TYPE_CHECKING:
-    import pandas as pd
+    from pandas import DataFrame
     from sqlalchemy.engine import Engine
 
 logger: LoggerProtocol = get_logger(__name__)
@@ -43,12 +47,8 @@ class DBConfig:
     options: str | None = None
 
     @classmethod
-    def from_mapping(cls, mapping: dict[str, Any]) -> DBConfig:
+    def from_mapping(cls, mapping: Mapping[str, Any]) -> DBConfig:
         """Build a DBConfig from a mapping loaded from YAML."""
-        if not isinstance(mapping, dict):
-            msg = "DB config entry must be a mapping"
-            raise DBConfigError(msg)
-
         return cls(
             dsn=str(mapping["dsn"]) if mapping.get("dsn") else None,
             host=str(mapping["host"]) if mapping.get("host") else None,
@@ -90,13 +90,21 @@ def _load_db_config_yaml(config_path: Path) -> dict[str, DBConfig]:
         raise DBConfigError(msg) from exc
 
     try:
-        loaded = yaml.safe_load(raw_content) or {}
+        loaded_raw = yaml.safe_load(raw_content)
     except yaml.YAMLError as exc:
         msg = f"Failed to parse YAML in {config_path}: {exc}"
         raise DBConfigError(msg) from exc
 
+    if loaded_raw is None:
+        return {}
+    if not isinstance(loaded_raw, dict):
+        msg = f"DB config file must contain a mapping at top level: {config_path}"
+        raise DBConfigError(msg)
+
+    loaded_map = cast(dict[str, Mapping[str, Any]], loaded_raw)
+
     configs: dict[str, DBConfig] = {}
-    for alias, entry in loaded.items():
+    for alias, entry in loaded_map.items():
         configs[str(alias)] = DBConfig.from_mapping(entry)
     return configs
 
@@ -131,7 +139,7 @@ def get_engine(alias: str = "default", *, config_path: Path | None = None) -> En
         return engine
 
 
-def _build_insert_statement(table: Table, engine: Engine) -> object:
+def _build_insert_statement(table: Table, engine: Engine) -> PGInsert | SQLiteInsert:
     dialect = engine.dialect.name
     if dialect == "postgresql":
         return pg_insert(table)
@@ -145,13 +153,13 @@ def _build_insert_statement(table: Table, engine: Engine) -> object:
 
 
 def upsert_dataframe(
-    df: pd.DataFrame,
+    df: DataFrame,
     table_name: str,
     key_fields: list[str],
     engine: Engine,
 ) -> None:
     """Perform an UPSERT of a pandas DataFrame into a database table."""
-    if df is None or getattr(df, "empty", False):
+    if getattr(df, "empty", False):
         logger.info("Skip upsert: DataFrame is empty", table=table_name)
         return
 
@@ -167,25 +175,27 @@ def upsert_dataframe(
             msg = f"Key field '{key}' is not present in table '{table_name}'"
             raise UpsertError(msg)
 
-    records = df.to_dict(orient="records")  # pyright: ignore[reportUnknownMemberType]
+    records: list[dict[str, Any]] = cast(
+        list[dict[str, Any]], df.to_dict(orient="records")  # pyright: ignore[reportUnknownMemberType]
+    )
     if not records:
         logger.info("Skip upsert: no records to insert", table=table_name)
         return
 
-    insert_stmt = _build_insert_statement(table, engine).values(records)
-    update_columns = {
-        column.name: insert_stmt.excluded[column.name]
-        for column in table.columns
-        if column.name not in key_fields
-    }
+    insert_stmt_any = cast(Any, _build_insert_statement(table, engine).values(records))
+    update_columns: dict[str, Any] = {}
+    for column in table.columns:
+        if column.name in key_fields:
+            continue
+        update_columns[column.name] = insert_stmt_any.excluded[column.name]
 
     if update_columns:
-        stmt = insert_stmt.on_conflict_do_update(
+        stmt = insert_stmt_any.on_conflict_do_update(
             index_elements=key_fields,
             set_=update_columns,
         )
     else:
-        stmt = insert_stmt.on_conflict_do_nothing(index_elements=key_fields)
+        stmt = insert_stmt_any.on_conflict_do_nothing(index_elements=key_fields)
 
     try:
         with engine.begin() as conn:

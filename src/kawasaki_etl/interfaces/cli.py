@@ -4,6 +4,7 @@ from pathlib import Path
 
 import typer
 from rich.console import Console
+from sqlalchemy.engine import Engine
 
 from kawasaki_etl.core import (
     DBConnectionError,
@@ -147,7 +148,7 @@ class CLIInterface(BaseInterface):
 
         console.print(f"ダウンロード先: {dest_path}")
 
-    def _get_engine(self, alias: str) -> object:
+    def _get_engine(self, alias: str) -> Engine:
         try:
             return get_engine(alias)
         except DBConnectionError as exc:
@@ -162,7 +163,7 @@ class CLIInterface(BaseInterface):
             raise typer.Exit(code=1) from exc
 
     def _run_pipeline(
-        self, dataset: DatasetConfig, engine: object | None = None,
+        self, dataset: DatasetConfig, engine: Engine | None = None,
     ) -> None:
         db_engine = engine or self._get_engine("default")
         if dataset.category == "wifi" or dataset.parser == "wifi_usage_parser":
@@ -170,7 +171,8 @@ class CLIInterface(BaseInterface):
             return
 
         msg = f"Unsupported dataset category: {dataset.category}"
-        raise typer.Exit(code=1, message=msg)
+        typer.secho(msg, err=True, fg=typer.colors.RED)
+        raise typer.Exit(code=1)
 
     def run_dataset(self, dataset_id: str) -> None:
         """Run a single ETL pipeline for the given dataset id."""

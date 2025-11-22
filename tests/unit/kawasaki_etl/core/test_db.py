@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import pandas as pd
 import pytest
+from pytest import MonkeyPatch
 from sqlalchemy import Column, Integer, MetaData, String, Table, create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 
 from kawasaki_etl.core.db import DBConnectionError, get_engine, upsert_dataframe
 
 
-def test_get_engine_prefers_env(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_engine_prefers_env(monkeypatch: MonkeyPatch) -> None:
     """Env の DSN を使って Engine を生成できること."""
     monkeypatch.setenv("DB_DSN", "sqlite+pysqlite:///:memory:")
     engine = get_engine()
@@ -17,14 +18,16 @@ def test_get_engine_prefers_env(monkeypatch: pytest.MonkeyPatch) -> None:
         assert conn.execute(text("select 1")).scalar() == 1
 
 
-def test_get_engine_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_engine_failure(monkeypatch: MonkeyPatch) -> None:
     """接続失敗時にわかりやすい例外が出ること."""
     class DummyError(SQLAlchemyError): ...
 
     def fake_create_engine(*_args: object, **_kwargs: object) -> None:
         raise DummyError("boom")
 
-    monkeypatch.setattr("kawasaki_etl.core.db.create_engine", fake_create_engine)
+    monkeypatch.setattr(
+        "kawasaki_etl.core.db.create_engine", value=fake_create_engine
+    )  # pyright: ignore[reportCallIssue]
     monkeypatch.setenv("DB_DSN", "sqlite+pysqlite:///:memory:")
 
     with pytest.raises(DBConnectionError) as excinfo:
