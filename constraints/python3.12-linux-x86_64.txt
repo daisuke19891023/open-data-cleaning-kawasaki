@@ -59,7 +59,7 @@ commitizen==4.8.3
     # via testproject (pyproject.toml)
 coverage==7.10.6
     # via pytest-cov
-cryptography==45.0.5
+cryptography==46.0.3
     # via secretstorage
 cyclonedx-python-lib==11.0.0
     # via pip-audit
