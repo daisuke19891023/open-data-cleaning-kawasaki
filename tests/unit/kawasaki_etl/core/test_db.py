@@ -25,7 +25,7 @@ def test_get_engine_failure(monkeypatch: pytest.MonkeyPatch) -> None:
         raise DummyError("boom")
 
     monkeypatch.setattr(
-        "kawasaki_etl.core.db.create_engine", value=fake_create_engine,
+        "kawasaki_etl.core.db.create_engine", fake_create_engine,
     )  # pyright: ignore[reportCallIssue]
     monkeypatch.setenv("DB_DSN", "sqlite+pysqlite:///:memory:")
 
