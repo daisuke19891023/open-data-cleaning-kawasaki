@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from kawasaki_etl.configs.population import POPULATION_2025_PAGES
+from kawasaki_etl.configs.population import (
+    POPULATION_2025_PAGES,
+    get_population_pages_for_year,
+)
 from kawasaki_etl.pipelines.opendata import DEFAULT_BASE_DIR as OPEN_DATA_BASE_DIR
 from kawasaki_etl.pipelines.opendata import download_opendata_page
 from kawasaki_etl.utils.logger import LoggerProtocol, get_logger
@@ -36,4 +39,55 @@ def iter_population_2025_pages() -> Iterator[OpenDataPage]:
     return iter(POPULATION_2025_PAGES)
 
 
-__all__ = ["download_population_2025_pages", "iter_population_2025_pages"]
+def download_population_2023_pages(base_dir: Path | None = None) -> list[Path]:
+    """人口・世帯カテゴリ(2023年度)のオープンデータを一括取得する."""
+    pages = get_population_pages_for_year(2023)
+    target_dir = base_dir or (OPEN_DATA_BASE_DIR / "population_2023")
+
+    logger.info(
+        "Downloading 2023 population open data",
+        count=len(pages),
+        destination=str(target_dir),
+    )
+
+    outputs: list[Path] = []
+    for page in pages:
+        outputs.extend(download_opendata_page(page, base_dir=target_dir))
+    return outputs
+
+
+def iter_population_2023_pages() -> Iterator[OpenDataPage]:
+    """人口・世帯カテゴリ(2023年度)のページ定義を列挙する."""
+    return iter(get_population_pages_for_year(2023))
+
+
+def download_population_2022_pages(base_dir: Path | None = None) -> list[Path]:
+    """人口・世帯カテゴリ(2022年度)のオープンデータを一括取得する."""
+    pages = get_population_pages_for_year(2022)
+    target_dir = base_dir or (OPEN_DATA_BASE_DIR / "population_2022")
+
+    logger.info(
+        "Downloading 2022 population open data",
+        count=len(pages),
+        destination=str(target_dir),
+    )
+
+    outputs: list[Path] = []
+    for page in pages:
+        outputs.extend(download_opendata_page(page, base_dir=target_dir))
+    return outputs
+
+
+def iter_population_2022_pages() -> Iterator[OpenDataPage]:
+    """人口・世帯カテゴリ(2022年度)のページ定義を列挙する."""
+    return iter(get_population_pages_for_year(2022))
+
+
+__all__ = [
+    "download_population_2022_pages",
+    "download_population_2023_pages",
+    "download_population_2025_pages",
+    "iter_population_2022_pages",
+    "iter_population_2023_pages",
+    "iter_population_2025_pages",
+]

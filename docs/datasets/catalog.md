@@ -57,6 +57,8 @@
 | 子育て・教育 | 公共施設のオープンデータについて（子育て関連施設のオープンデータ含む） | https://www.city.kawasaki.jp/170/page/0000116229.html | CSV/JSON 等 |  | 未着手 |  |
 | 子育て・教育 | 小学校の給食献立表（関連ページへのオープンデータリンク） | https://www.city.kawasaki.jp/350/page/0000088528.html | PDF 等 |  | 未着手 | 給食センター・学校給食ページにリンクあり |
 | 人口・世帯 | 長期時系列データ（人口） | https://www.city.kawasaki.jp/170/page/0000010875.html | CSV/Excel 等 | population_longterm_overview | 取り込み準備OK | `configs.population.LONG_TERM_PAGE` を download_opendata_page で取得可能 |
+| 人口・世帯 | 人口・世帯カテゴリ（2023年度リンク集） | https://www.city.kawasaki.jp/main/opendata/opendata_category_9.html#2023 | CSV/Excel 等 | population_2023_* | 取り込み準備OK | `pipelines.population.download_population_2023_pages` で年度内の公開データを一括保存 |
+| 人口・世帯 | 人口・世帯カテゴリ（2022年度リンク集） | https://www.city.kawasaki.jp/main/opendata/opendata_category_9.html#2022 | CSV/Excel 等 | population_2022_* | 取り込み準備OK | `pipelines.population.download_population_2022_pages` で年度内の公開データを一括保存 |
 | 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年4月1日現在） | https://www.city.kawasaki.jp/170/page/0000175749.html | CSV/Excel 等 | population_snapshot_2025_04 | 取り込み準備OK | `pipelines.population.download_population_2025_pages` で一括取得 |
 | 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年5月1日現在） | https://www.city.kawasaki.jp/170/page/0000176618.html | CSV/Excel 等 | population_snapshot_2025_05 | 取り込み準備OK | 同上 |
 | 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年6月1日現在） | https://www.city.kawasaki.jp/170/page/0000177392.html | CSV/Excel 等 | population_snapshot_2025_06 | 取り込み準備OK | 同上 |

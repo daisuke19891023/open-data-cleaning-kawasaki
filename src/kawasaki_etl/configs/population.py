@@ -2,7 +2,11 @@ from __future__ import annotations
 
 # ruff: noqa: RUF001
 
-from urllib.parse import urljoin
+import re
+from pathlib import Path
+from urllib.parse import urljoin, urlparse
+
+import httpx
 
 from kawasaki_etl.models import OpenDataPage, OpenDataResource
 
@@ -425,4 +429,116 @@ POPULATION_2025_PAGES: tuple[OpenDataPage, ...] = (
 )
 
 
-__all__ = ["BASE_CATEGORY_URL", "POPULATION_2025_PAGES"]
+__all__ = [
+    "BASE_CATEGORY_URL",
+    "POPULATION_2025_PAGES",
+    "get_population_pages_for_year",
+]
+
+
+CMSFILES_LINK_RE = re.compile(r'href="([^"]*cmsfiles[^"]+)"[^>]*>(.*?)</a>', re.DOTALL)
+YEAR_MONTH_DIGITS = 6
+MONTHS_PER_YEAR = 12
+
+
+def _make_identifier(year: int, page_url: str) -> str:
+    stem = Path(urlparse(page_url).path).stem
+    return f"population_{year}_{stem}"
+
+
+def _extract_year_section_links(html: str, year: int) -> list[tuple[str, str]]:
+    year_block = re.search(
+        rf"<h2>{year}年度</h2>\s*<ul class=\"publicity_list\">(.*?)</ul>",
+        html,
+        re.DOTALL,
+    )
+    if not year_block:
+        return []
+
+    links: list[tuple[str, str]] = []
+    for href, title in re.findall(
+        r'href="([^"]+)"[^>]*>([^<]+)</a>', year_block.group(1),
+    ):
+        links.append((href, title.strip()))
+    return links
+
+
+def _infer_updated_at(resource_url: str, fallback_year: int) -> str:
+    filename = Path(urlparse(resource_url).path).name
+    year_month_match = re.search(r"(\d{6}|\d{4})", filename)
+    if not year_month_match:
+        return f"{fallback_year}-01-01"
+
+    raw = year_month_match.group(1)
+    if len(raw) == YEAR_MONTH_DIGITS:
+        year = int(raw[:4])
+        month = int(raw[4:6])
+    else:
+        year = 2000 + int(raw[:2])
+        month = int(raw[2:])
+
+    if not 1 <= month <= MONTHS_PER_YEAR:
+        return f"{fallback_year}-01-01"
+    return f"{year:04d}-{month:02d}-01"
+
+
+def _extract_resources(
+    page_html: str, page_url: str, fallback_year: int,
+) -> tuple[OpenDataResource, ...]:
+    resources: list[OpenDataResource] = []
+    for href, title_html in CMSFILES_LINK_RE.findall(page_html):
+        title = re.sub(r"<[^>]+>", "", title_html).strip()
+        resource_url = urljoin(page_url, href)
+        resources.append(
+            OpenDataResource(
+                title=title,
+                url=resource_url,
+                file_format=Path(urlparse(resource_url).path).suffix.lstrip(".").lower(),
+                updated_at=_infer_updated_at(resource_url, fallback_year),
+            ),
+        )
+    return tuple(resources)
+
+
+def _resolve_population_pages_for_year(
+    year: int, client: httpx.Client,
+) -> tuple[OpenDataPage, ...]:
+    category_response = client.get(BASE_CATEGORY_URL)
+    category_response.raise_for_status()
+    category_html = category_response.text
+    links = _extract_year_section_links(category_html, year)
+
+    pages: list[OpenDataPage] = []
+    for href, title in links:
+        page_url = urljoin(BASE_CATEGORY_URL, href)
+        page_response = client.get(page_url)
+        page_response.raise_for_status()
+        page_html = page_response.text
+        resources = _extract_resources(page_html, page_url, fallback_year=year)
+        if not resources:
+            continue
+        pages.append(
+            OpenDataPage(
+                identifier=_make_identifier(year, page_url),
+                page_url=page_url,
+                description=title,
+                resources=resources,
+            ),
+        )
+
+    return tuple(pages)
+
+
+def get_population_pages_for_year(
+    year: int, client: httpx.Client | None = None,
+) -> tuple[OpenDataPage, ...]:
+    """人口・世帯カテゴリの指定年度セクションを動的にパースして OpenDataPage を返す."""
+
+    def _resolve(http_client: httpx.Client) -> tuple[OpenDataPage, ...]:
+        return _resolve_population_pages_for_year(year, http_client)
+
+    if client is not None:
+        return _resolve(client)
+
+    with httpx.Client(follow_redirects=True) as http_client:
+        return _resolve(http_client)
