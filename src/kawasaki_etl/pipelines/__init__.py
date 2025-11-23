@@ -7,8 +7,10 @@ from typing import TYPE_CHECKING, Any
 __all__ = [
     "download_disaster_prevention_pages",
     "download_opendata_page",
+    "download_population_2024_pages",
     "download_population_2025_pages",
     "iter_disaster_prevention_pages",
+    "iter_population_2024_pages",
     "iter_population_2025_pages",
     "run_childcare_opendata",
     "run_tourism_irikomi",
@@ -31,9 +33,17 @@ def __getattr__(name: str) -> Any:  # pragma: no cover - thin lazy import wrappe
             "kawasaki_etl.pipelines.disaster",
             "iter_disaster_prevention_pages",
         ),
+        "download_population_2024_pages": (
+            "kawasaki_etl.pipelines.population",
+            "download_population_2024_pages",
+        ),
         "download_population_2025_pages": (
             "kawasaki_etl.pipelines.population",
             "download_population_2025_pages",
+        ),
+        "iter_population_2024_pages": (
+            "kawasaki_etl.pipelines.population",
+            "iter_population_2024_pages",
         ),
         "iter_population_2025_pages": (
             "kawasaki_etl.pipelines.population",
@@ -66,7 +76,9 @@ if TYPE_CHECKING:  # pragma: no cover
     from kawasaki_etl.pipelines.childcare import run_childcare_opendata
     from kawasaki_etl.pipelines.opendata import download_opendata_page
     from kawasaki_etl.pipelines.population import (
+        download_population_2024_pages,
         download_population_2025_pages,
+        iter_population_2024_pages,
         iter_population_2025_pages,
     )
     from kawasaki_etl.pipelines.tourism import run_tourism_irikomi
