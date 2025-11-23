@@ -156,9 +156,16 @@ def _mask_sensitive_dsn(dsn: str) -> str:
     except Exception:  # pragma: no cover - fallback for unexpected formats
         return "***"
 
+    sensitive_query_keys = {"user", "username", "password", "pass", "pwd"}
+    masked_query = {
+        key: "***" if key.lower() in sensitive_query_keys else value
+        for key, value in url.query.items()
+    }
+
     masked_url = url.set(
         username="***" if url.username else None,
         password="***" if url.password else None,
+        query=masked_query or None,
     )
     return unquote(masked_url.render_as_string(hide_password=False))
 

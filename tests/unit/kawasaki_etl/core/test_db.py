@@ -89,6 +89,20 @@ def test_mask_sensitive_dsn_masks_user_and_password() -> None:
     assert masked.startswith("postgresql+psycopg://***:***@db.example.com:5432/sample")
 
 
+def test_mask_sensitive_dsn_masks_query_credentials() -> None:
+    """DSN のクエリパラメータにある資格情報がマスクされること."""
+    dsn = "postgresql:///?user=alice&password=secret&dbname=test"
+
+    masked = db._mask_sensitive_dsn(  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+        dsn,
+    )
+
+    assert "alice" not in masked
+    assert "secret" not in masked
+    assert "user=***" in masked
+    assert "password=***" in masked
+
+
 def test_upsert_dataframe_updates_existing() -> None:
     """UPSERT により既存行が更新されること."""
     engine = create_engine("sqlite+pysqlite:///:memory:")
