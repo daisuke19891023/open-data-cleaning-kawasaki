@@ -4,6 +4,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
+from urllib.parse import unquote
 
 from pandas import DataFrame
 import yaml
@@ -11,6 +12,7 @@ from sqlalchemy import MetaData, Table, create_engine, text
 from sqlalchemy.dialects.postgresql import Insert as PGInsert
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.engine import make_url
 
 from kawasaki_etl.utils.logger import LoggerProtocol, get_logger
 
@@ -133,11 +135,32 @@ def get_engine(alias: str = "default", *, config_path: Path | None = None) -> En
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
     except SQLAlchemyError as exc:
-        logger.error("DB connection failed", dsn=dsn, error=str(exc))
+        logger.error(
+            "DB connection failed", dsn=_mask_sensitive_dsn(dsn), error=str(exc),
+        )
         msg = f"DB connection failed: {exc}"
         raise DBConnectionError(msg) from exc
     else:
         return engine
+
+
+def _mask_sensitive_dsn(dsn: str) -> str:
+    """Mask sensitive parts of a DSN for safe logging.
+
+    User name and password are replaced with ``***`` while keeping the
+    structure of the DSN intact. If parsing fails, a fully masked placeholder is
+    returned to avoid leaking the original value.
+    """
+    try:
+        url = make_url(dsn)
+    except Exception:  # pragma: no cover - fallback for unexpected formats
+        return "***"
+
+    masked_url = url.set(
+        username="***" if url.username else None,
+        password="***" if url.password else None,
+    )
+    return unquote(masked_url.render_as_string(hide_password=False))
 
 
 def _build_insert_statement(table: Table, engine: Engine) -> PGInsert | SQLiteInsert:
