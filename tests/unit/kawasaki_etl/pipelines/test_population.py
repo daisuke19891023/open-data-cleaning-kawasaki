@@ -5,7 +5,12 @@ from collections.abc import Callable
 
 import pytest
 
-from kawasaki_etl.configs import POPULATION_2024_PAGES, POPULATION_2025_PAGES
+from kawasaki_etl.configs import (
+    POPULATION_2022_PAGES,
+    POPULATION_2023_PAGES,
+    POPULATION_2024_PAGES,
+    POPULATION_2025_PAGES,
+)
 from kawasaki_etl.models import OpenDataPage
 from kawasaki_etl.pipelines import population
 
@@ -13,6 +18,16 @@ from kawasaki_etl.pipelines import population
 @pytest.mark.parametrize(
     ("pages", "download_func", "iter_func"),  # type: ignore[arg-type]
     [
+        (
+            POPULATION_2022_PAGES,
+            population.download_population_2022_pages,
+            population.iter_population_2022_pages,
+        ),
+        (
+            POPULATION_2023_PAGES,
+            population.download_population_2023_pages,
+            population.iter_population_2023_pages,
+        ),
         (
             POPULATION_2024_PAGES,
             population.download_population_2024_pages,
