@@ -8,6 +8,7 @@ __all__ = [
     "download_disaster_prevention_pages",
     "download_opendata_page",
     "iter_disaster_prevention_pages",
+    "run_childcare_opendata",
     "run_tourism_irikomi",
     "run_wifi_count",
 ]
@@ -34,6 +35,10 @@ def __getattr__(name: str) -> Any:  # pragma: no cover - thin lazy import wrappe
         from kawasaki_etl.pipelines.opendata import download_opendata_page
 
         return download_opendata_page
+    if name == "run_childcare_opendata":
+        from kawasaki_etl.pipelines.childcare import run_childcare_opendata
+
+        return run_childcare_opendata
     message = f"module {__name__!s} has no attribute {name!s}"
     raise AttributeError(message)
 
@@ -43,6 +48,7 @@ if TYPE_CHECKING:  # pragma: no cover
         download_disaster_prevention_pages,
         iter_disaster_prevention_pages,
     )
+    from kawasaki_etl.pipelines.childcare import run_childcare_opendata
     from kawasaki_etl.pipelines.opendata import download_opendata_page
     from kawasaki_etl.pipelines.tourism import run_tourism_irikomi
     from kawasaki_etl.pipelines.wifi import run_wifi_count

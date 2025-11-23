@@ -29,3 +29,23 @@ tourism_r05_irikomi:
   snapshot_date: 2023-12-31
   extra:
     notes: "観光入込客数（令和5年版）向けの PDF パイプライン（現状モック）"
+
+childcare_acceptance_r8_04:
+  category: childcare
+  url: https://www.city.kawasaki.jp/450/page/0000030624.html#opendata_dataset_7
+  type: pdf
+  parser: childcare_opendata
+  key_fields: []
+  snapshot_date: 2024-11-21
+  extra:
+    notes: "認可保育所等の受入可能数（最新掲載分）"
+
+childcare_adjustment_result_r7_11:
+  category: childcare
+  url: https://www.city.kawasaki.jp/450/page/0000030624.html#opendata_dataset_10
+  type: pdf
+  parser: childcare_opendata
+  key_fields: []
+  snapshot_date: 2024-11-01
+  extra:
+    notes: "認可保育所等の利用調整結果（最新掲載分）"
