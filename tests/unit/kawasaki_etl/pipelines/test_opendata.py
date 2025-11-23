@@ -4,7 +4,12 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from kawasaki_etl.configs import AED_LOCATIONS_PAGE, PHARMACY_PERMITS_PAGE
+from kawasaki_etl.configs import (
+    AED_LOCATIONS_PAGE,
+    CHILDCARE_ACCEPTANCE_PAGE,
+    CHILDCARE_ADJUSTMENT_PAGE,
+    PHARMACY_PERMITS_PAGE,
+)
 from kawasaki_etl.pipelines import opendata
 from kawasaki_etl.pipelines.opendata import download_opendata_page
 
@@ -13,7 +18,12 @@ if TYPE_CHECKING:  # pragma: no cover
     from kawasaki_etl.models import OpenDataPage
 
 
-PAGES = [PHARMACY_PERMITS_PAGE, AED_LOCATIONS_PAGE]
+PAGES = [
+    PHARMACY_PERMITS_PAGE,
+    AED_LOCATIONS_PAGE,
+    CHILDCARE_ACCEPTANCE_PAGE,
+    CHILDCARE_ADJUSTMENT_PAGE,
+]
 PAGE_IDS = [page.identifier for page in PAGES]
 
 
