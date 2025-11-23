@@ -114,6 +114,7 @@ uv sync
 cp .env.example .env
 
 # Edit .env with your configuration
+# 機密情報（DB ユーザー・パスワードなど）は .env や実行時の環境変数でのみ設定し、リポジトリ管理されるファイルには書かないでください。
 ```
 
 ### Running the Application (CLI)
@@ -163,7 +164,7 @@ wifi_2020_count:
 
 ### Environment Variables
 
-Configuration is managed through environment variables. See `.env.example` for all available options:
+Configuration is managed through environment variables. See `.env.example` for all available options. Keep credentials and other secrets only in environment variables (e.g., `.env` loaded via `--dotenv`) and avoid committing them to the repository:
 
 | Variable         | Description                                  | Default | Options                                         |
 | ---------------- | -------------------------------------------- | ------- | ----------------------------------------------- |
