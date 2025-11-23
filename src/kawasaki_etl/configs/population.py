@@ -39,6 +39,74 @@ LONG_TERM_PAGE = OpenDataPage(
     ),
 )
 
+FOREIGN_NATIONALITIES_2023_BASE_URL = (
+    "https://www.city.kawasaki.jp/250/page/0000153605.html"
+)
+FOREIGN_NATIONALITIES_2023_PAGE = OpenDataPage(
+    identifier="foreign_nationalities_2023",
+    page_url=f"{FOREIGN_NATIONALITIES_2023_BASE_URL}#opendata_dataset_1",
+    description="外国人国籍地域別統計（令和5(2023)年度）",
+    resources=tuple(
+        OpenDataResource(
+            title=f"外国人国籍地域別統計（{year:04d}年{month:02d}月末時点）",
+            url=urljoin(
+                FOREIGN_NATIONALITIES_2023_BASE_URL,
+                f"../cmsfiles/contents/0000153/153605/{year:04d}{month:02d}.csv",
+            ),
+            file_format="csv",
+            updated_at=f"{year:04d}-{month:02d}-01",
+        )
+        for year, month in (
+            (2023, 4),
+            (2023, 5),
+            (2023, 6),
+            (2023, 7),
+            (2023, 8),
+            (2023, 9),
+            (2023, 10),
+            (2023, 11),
+            (2023, 12),
+            (2024, 1),
+            (2024, 2),
+            (2024, 3),
+        )
+    ),
+)
+
+FOREIGN_NATIONALITIES_2022_BASE_URL = (
+    "https://www.city.kawasaki.jp/250/page/0000139871.html"
+)
+FOREIGN_NATIONALITIES_2022_PAGE = OpenDataPage(
+    identifier="foreign_nationalities_2022",
+    page_url=f"{FOREIGN_NATIONALITIES_2022_BASE_URL}#opendata_dataset_1",
+    description="外国人国籍地域別統計（令和4(2022)年度）",
+    resources=tuple(
+        OpenDataResource(
+            title=f"外国人国籍地域別統計（{year:04d}年{month:02d}月末時点）",
+            url=urljoin(
+                FOREIGN_NATIONALITIES_2022_BASE_URL,
+                f"../cmsfiles/contents/0000139/139871/{year:04d}{month:02d}.csv",
+            ),
+            file_format="csv",
+            updated_at=f"{year:04d}-{month:02d}-01",
+        )
+        for year, month in (
+            (2022, 4),
+            (2022, 5),
+            (2022, 6),
+            (2022, 7),
+            (2022, 8),
+            (2022, 9),
+            (2022, 10),
+            (2022, 11),
+            (2022, 12),
+            (2023, 1),
+            (2023, 2),
+            (2023, 3),
+        )
+    ),
+)
+
 POPULATION_2024_01_BASE_URL = "https://www.city.kawasaki.jp/170/page/0000157367.html"
 POPULATION_2024_01_PAGE = OpenDataPage(
     identifier="population_snapshot_2024_01",
@@ -755,6 +823,68 @@ POPULATION_DYNAMICS_2024_PAGE = OpenDataPage(
     ),
 )
 
+POPULATION_DYNAMICS_2023_BASE_URL = (
+    "https://www.city.kawasaki.jp/shisei/category/51-4-3-3-30-0-0-0-0-0.html"
+)
+POPULATION_DYNAMICS_2023_PAGE = OpenDataPage(
+    identifier="population_dynamics_2023",
+    page_url=f"{POPULATION_DYNAMICS_2023_BASE_URL}#opendata_dataset_6",
+    description="川崎市の人口動態（令和5(2023)年）統計表",
+    resources=tuple(
+        OpenDataResource(
+            title=f"第{index}表 人口動態資料（令和5年）",
+            url=urljoin(
+                POPULATION_DYNAMICS_2023_BASE_URL,
+                f"https://www.city.kawasaki.jp/170/cmsfiles/contents/0000158/158603/{name}",
+            ),
+            file_format="xls",
+            updated_at="2023-12-31",
+        )
+        for index, name in (
+            (1, "1hyo05.xls"),
+            (2, "2hyo05.xls"),
+            (3, "3hyo05.xls"),
+            (4, "4hyo05.xls"),
+            (5, "5hyo05.xls"),
+            (6, "6hyo05.xls"),
+            (7, "7hyo05.xls"),
+            (8, "8hyo05.xls"),
+            (9, "9hyo05.xls"),
+        )
+    ),
+)
+
+POPULATION_DYNAMICS_2022_BASE_URL = (
+    "https://www.city.kawasaki.jp/shisei/category/51-4-3-3-29-0-0-0-0-0.html"
+)
+POPULATION_DYNAMICS_2022_PAGE = OpenDataPage(
+    identifier="population_dynamics_2022",
+    page_url=f"{POPULATION_DYNAMICS_2022_BASE_URL}#opendata_dataset_6",
+    description="川崎市の人口動態（令和4(2022)年）統計表",
+    resources=tuple(
+        OpenDataResource(
+            title=f"第{index}表 人口動態資料（令和4年）",
+            url=urljoin(
+                POPULATION_DYNAMICS_2022_BASE_URL,
+                f"https://www.city.kawasaki.jp/170/cmsfiles/contents/0000149/149112/{name}",
+            ),
+            file_format="xls",
+            updated_at="2022-12-31",
+        )
+        for index, name in (
+            (1, "1hyo04.xls"),
+            (2, "2hyo04.xls"),
+            (3, "3hyo04.xls"),
+            (4, "4hyo04.xls"),
+            (5, "5hyo04.xls"),
+            (6, "6hyo04.xls"),
+            (7, "7hyo04.xls"),
+            (8, "8hyo04.xls"),
+            (9, "9hyo04.xls"),
+        )
+    ),
+)
+
 POPULATION_2025_04_BASE_URL = "https://www.city.kawasaki.jp/170/page/0000175749.html"
 POPULATION_2025_04_PAGE = OpenDataPage(
     identifier="population_snapshot_2025_04",
@@ -1123,6 +1253,18 @@ POPULATION_2025_11_PAGE = OpenDataPage(
     ),
 )
 
+POPULATION_2023_PAGES: tuple[OpenDataPage, ...] = (
+    LONG_TERM_PAGE,
+    FOREIGN_NATIONALITIES_2023_PAGE,
+    POPULATION_DYNAMICS_2023_PAGE,
+)
+
+POPULATION_2022_PAGES: tuple[OpenDataPage, ...] = (
+    LONG_TERM_PAGE,
+    FOREIGN_NATIONALITIES_2022_PAGE,
+    POPULATION_DYNAMICS_2022_PAGE,
+)
+
 POPULATION_2024_PAGES: tuple[OpenDataPage, ...] = (
     LONG_TERM_PAGE,
     POPULATION_2024_01_PAGE,
@@ -1165,4 +1307,10 @@ POPULATION_2025_PAGES: tuple[OpenDataPage, ...] = (
 )
 
 
-__all__ = ["BASE_CATEGORY_URL", "POPULATION_2024_PAGES", "POPULATION_2025_PAGES"]
+__all__ = [
+    "BASE_CATEGORY_URL",
+    "POPULATION_2022_PAGES",
+    "POPULATION_2023_PAGES",
+    "POPULATION_2024_PAGES",
+    "POPULATION_2025_PAGES",
+]

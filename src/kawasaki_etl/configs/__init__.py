@@ -19,6 +19,8 @@ from kawasaki_etl.configs.disaster_prevention import (
 )
 from kawasaki_etl.configs.population import (
     BASE_CATEGORY_URL,
+    POPULATION_2022_PAGES,
+    POPULATION_2023_PAGES,
     POPULATION_2024_PAGES,
     POPULATION_2025_PAGES,
 )
@@ -39,6 +41,8 @@ __all__ = [
     "FIRE_STATION_PAGE",
     "HAZARD_PAGE",
     "PHARMACY_PERMITS_PAGE",
+    "POPULATION_2022_PAGES",
+    "POPULATION_2023_PAGES",
     "POPULATION_2024_PAGES",
     "POPULATION_2025_PAGES",
     "WATER_SUPPLY_PAGE",
