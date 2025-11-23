@@ -56,20 +56,20 @@
 | 子育て・教育 | 令和6年度学校基本調査結果 | https://www.city.kawasaki.jp/170/page/0000174797.html | PDF/Excel 等 |  | 未着手 |  |
 | 子育て・教育 | 公共施設のオープンデータについて（子育て関連施設のオープンデータ含む） | https://www.city.kawasaki.jp/170/page/0000116229.html | CSV/JSON 等 |  | 未着手 |  |
 | 子育て・教育 | 小学校の給食献立表（関連ページへのオープンデータリンク） | https://www.city.kawasaki.jp/350/page/0000088528.html | PDF 等 |  | 未着手 | 給食センター・学校給食ページにリンクあり |
-| 人口・世帯 | 長期時系列データ（人口） | https://www.city.kawasaki.jp/170/page/0000010875.html | CSV/Excel 等 |  | 未着手 | 世帯数・男女別人口等の推移 |
-| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年4月1日現在） | https://www.city.kawasaki.jp/170/page/0000175749.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年5月1日現在） | https://www.city.kawasaki.jp/170/page/0000176618.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年6月1日現在） | https://www.city.kawasaki.jp/170/page/0000177392.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 外国人国籍地域別統計（令和7年度分） | https://www.city.kawasaki.jp/250/page/0000177712.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年7月1日現在） | https://www.city.kawasaki.jp/170/page/0000178232.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 令和7年町丁別世帯数・人口 6月末日現在 | https://www.city.kawasaki.jp/170/page/0000178367.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 令和7年町丁別年齢別人口 6月末日現在 | https://www.city.kawasaki.jp/170/page/0000178368.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年8月1日現在） | https://www.city.kawasaki.jp/170/page/0000178933.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年9月1日現在） | https://www.city.kawasaki.jp/170/page/0000180024.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年10月1日現在） | https://www.city.kawasaki.jp/170/page/0000180576.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 令和7年町丁別世帯数・人口 9月末日現在 | https://www.city.kawasaki.jp/170/page/0000181216.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 令和7年町丁別年齢別人口 9月末日現在 | https://www.city.kawasaki.jp/170/page/0000181218.html | CSV/Excel 等 |  | 未着手 |  |
-| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年11月1日現在） | https://www.city.kawasaki.jp/170/page/0000181789.html | CSV/Excel 等 |  | 未着手 |  |
+| 人口・世帯 | 長期時系列データ（人口） | https://www.city.kawasaki.jp/170/page/0000010875.html | CSV/Excel 等 | population_longterm_overview | 取り込み準備OK | `configs.population.LONG_TERM_PAGE` を download_opendata_page で取得可能 |
+| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年4月1日現在） | https://www.city.kawasaki.jp/170/page/0000175749.html | CSV/Excel 等 | population_snapshot_2025_04 | 取り込み準備OK | `pipelines.population.download_population_2025_pages` で一括取得 |
+| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年5月1日現在） | https://www.city.kawasaki.jp/170/page/0000176618.html | CSV/Excel 等 | population_snapshot_2025_05 | 取り込み準備OK | 同上 |
+| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年6月1日現在） | https://www.city.kawasaki.jp/170/page/0000177392.html | CSV/Excel 等 | population_snapshot_2025_06 | 取り込み準備OK | 同上 |
+| 人口・世帯 | 外国人国籍地域別統計（令和7年度分） | https://www.city.kawasaki.jp/250/page/0000177712.html | CSV/Excel 等 | foreign_nationalities_2025 | 取り込み準備OK | 同上（PDF の規約も含む） |
+| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年7月1日現在） | https://www.city.kawasaki.jp/170/page/0000178232.html | CSV/Excel 等 | population_snapshot_2025_07 | 取り込み準備OK | 同上 |
+| 人口・世帯 | 令和7年町丁別世帯数・人口 6月末日現在 | https://www.city.kawasaki.jp/170/page/0000178367.html | CSV/Excel 等 | town_population_2025_07 | 取り込み準備OK | 同上 |
+| 人口・世帯 | 令和7年町丁別年齢別人口 6月末日現在 | https://www.city.kawasaki.jp/170/page/0000178368.html | CSV/Excel 等 | age_population_2025_07 | 取り込み準備OK | 同上（CSV あり） |
+| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年8月1日現在） | https://www.city.kawasaki.jp/170/page/0000178933.html | CSV/Excel 等 | population_snapshot_2025_08 | 取り込み準備OK | 同上 |
+| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年9月1日現在） | https://www.city.kawasaki.jp/170/page/0000180024.html | CSV/Excel 等 | population_snapshot_2025_09 | 取り込み準備OK | 同上 |
+| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年10月1日現在） | https://www.city.kawasaki.jp/170/page/0000180576.html | CSV/Excel 等 | population_snapshot_2025_10 | 取り込み準備OK | 同上（PDF/Excel 2種） |
+| 人口・世帯 | 令和7年町丁別世帯数・人口 9月末日現在 | https://www.city.kawasaki.jp/170/page/0000181216.html | CSV/Excel 等 | town_population_2025_09 | 取り込み準備OK | 同上（冊子PDF/Excel） |
+| 人口・世帯 | 令和7年町丁別年齢別人口 9月末日現在 | https://www.city.kawasaki.jp/170/page/0000181218.html | CSV/Excel 等 | age_population_2025_09 | 取り込み準備OK | 同上（CSV あり） |
+| 人口・世帯 | 川崎市の世帯数・人口、区別人口動態、区別市外移動人口（令和7年11月1日現在） | https://www.city.kawasaki.jp/170/page/0000181789.html | CSV/Excel 等 | population_snapshot_2025_11 | 取り込み準備OK | 同上（PDF/Excel 2種） |
 
 ## 消込済み（設定・ローダーあり）
 既に `configs/` とローダーで取り込み準備ができているものを記録します。レポートで挙がっているデータセットと突合し、二重登録を避けてください。

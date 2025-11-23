@@ -17,10 +17,12 @@ from kawasaki_etl.configs.disaster_prevention import (
     HAZARD_PAGE,
     WATER_SUPPLY_PAGE,
 )
+from kawasaki_etl.configs.population import BASE_CATEGORY_URL, POPULATION_2025_PAGES
 from kawasaki_etl.configs.pharmacy_permits import PHARMACY_PERMITS_PAGE
 
 __all__ = [
     "AED_LOCATIONS_PAGE",
+    "BASE_CATEGORY_URL",
     "CHILDCARE_ACCEPTANCE_PAGE",
     "CHILDCARE_ADJUSTMENT_PAGE",
     "CHILDCARE_PAGES",
@@ -33,5 +35,6 @@ __all__ = [
     "FIRE_STATION_PAGE",
     "HAZARD_PAGE",
     "PHARMACY_PERMITS_PAGE",
+    "POPULATION_2025_PAGES",
     "WATER_SUPPLY_PAGE",
 ]

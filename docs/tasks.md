@@ -127,6 +127,17 @@
   - データセットカタログに dataset_id と「取り込み準備OK」ステータスを記載し、利用パスを明示。
   - `uv run --extra dev nox -s lint typing test` で lint/型チェック/テストが成功することを確認。
 
+### T13. 人口・世帯カテゴリ(2025年度)データの取り込み準備
+- **概要**: 人口・世帯カテゴリ 2025 年度の各データセット URL を定義し、一括ダウンロード用パイプラインとテストを追加する。
+- **Acceptance Criteria**
+  - 各月の世帯数・人口、町丁別/年齢別人口、外国人統計などの dataset_id が config に登録されている。
+  - download_population_2025_pages で対象ファイル群が所定ディレクトリに保存される。
+- **DoD**: グローバル DoD。
+- **Status: DONE**
+  - `configs.population` に 2025 年度の人口関連 OpenDataPage を追加し、category 9 ページのリンクを消込。
+  - `pipelines.population` で一括ダウンロード関数と列挙関数を実装し、ユニットテストを追加。
+  - データセットカタログの人口・世帯カテゴリを dataset_id/ステータス付きで更新。
+
 ## 進め方の提案
 - 最初のスプリントで **T1〜T4 + T7** を完了して「ETL 基盤の骨格」を作る。
 - その後 **T8** で 1 本の CSV パイプラインを end-to-end で通し、冪等性や DB 連携を検証する。
