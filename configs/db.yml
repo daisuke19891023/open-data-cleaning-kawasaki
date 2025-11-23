@@ -1,20 +1,20 @@
 # DB 接続設定
 # alias ごとに接続情報をまとめます。DSN を直接指定するか、各要素から組み立てます。
 default:
-  # 完全な DSN がある場合はこちらを優先
-  dsn: postgresql+psycopg://kawasaki_etl:changeme@localhost:5432/kawasaki_opendata
+  # 完全な DSN がある場合はこちらを優先（機密情報は .env に置き換えてください）
+  dsn: postgresql+psycopg://YOUR_DB_USER:YOUR_DB_PASSWORD@YOUR_DB_HOST:5432/YOUR_DB_NAME
   # dsn がない場合に使用する接続要素
-  host: localhost
+  host: YOUR_DB_HOST
   port: 5432
-  user: kawasaki_etl
-  password: changeme
-  database: kawasaki_opendata
+  user: YOUR_DB_USER
+  password: YOUR_DB_PASSWORD
+  database: YOUR_DB_NAME
   # 追加の connect_args などを指定したい場合に使用
   options: "-c search_path=public"
 
 analytics:
-  host: analytics.db.local
+  host: ANALYTICS_DB_HOST
   port: 5432
-  user: reporting
-  password: secret
-  database: reporting_db
+  user: ANALYTICS_DB_USER
+  password: ANALYTICS_DB_PASSWORD
+  database: ANALYTICS_DB_NAME
