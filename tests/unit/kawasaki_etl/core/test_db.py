@@ -5,6 +5,7 @@ import pytest
 from sqlalchemy import Column, Integer, MetaData, String, Table, create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 
+from kawasaki_etl.core import db
 from kawasaki_etl.core.db import DBConnectionError, get_engine, upsert_dataframe
 
 
@@ -24,15 +25,68 @@ def test_get_engine_failure(monkeypatch: pytest.MonkeyPatch) -> None:
     def fake_create_engine(*_args: object, **_kwargs: object) -> None:
         raise DummyError("boom")
 
+    captured: dict[str, object] = {}
+
+    def fake_error(msg: str, **kwargs: object) -> None:
+        captured["msg"] = msg
+        captured.update(kwargs)
+
     monkeypatch.setattr(
         "kawasaki_etl.core.db.create_engine", fake_create_engine,
     )  # pyright: ignore[reportCallIssue]
     monkeypatch.setenv("DB_DSN", "sqlite+pysqlite:///:memory:")
+    monkeypatch.setattr(db.logger, "error", fake_error)
 
     with pytest.raises(DBConnectionError) as excinfo:
         get_engine()
 
     assert "DB connection failed" in str(excinfo.value)
+    assert captured["msg"] == "DB connection failed"
+    assert captured["dsn"] == "sqlite+pysqlite:///:memory:"
+
+
+def test_get_engine_failure_masks_password(monkeypatch: pytest.MonkeyPatch) -> None:
+    """ログにパスワードが出力されないようにマスクされること."""
+
+    class DummyError(SQLAlchemyError): ...
+
+    def fake_create_engine(*_args: object, **_kwargs: object) -> None:
+        raise DummyError("boom")
+
+    captured: dict[str, object] = {}
+
+    def fake_error(msg: str, **kwargs: object) -> None:
+        captured["msg"] = msg
+        captured.update(kwargs)
+
+    dsn = "postgresql+psycopg://user:secret@localhost:5432/example"
+
+    monkeypatch.setattr(
+        "kawasaki_etl.core.db.create_engine", fake_create_engine,
+    )  # pyright: ignore[reportCallIssue]
+    monkeypatch.setenv("DB_DSN", dsn)
+    monkeypatch.setattr(db.logger, "error", fake_error)
+
+    with pytest.raises(DBConnectionError):
+        get_engine()
+
+    safe_dsn = captured.get("dsn")
+    assert isinstance(safe_dsn, str)
+    assert "user" not in safe_dsn
+    assert "secret" not in safe_dsn
+    assert safe_dsn.startswith("postgresql+psycopg://***:***@")
+
+
+def test_mask_sensitive_dsn_masks_user_and_password() -> None:
+    """DSN 文字列のユーザー名とパスワードが置換されること."""
+    dsn = "postgresql+psycopg://user:password@db.example.com:5432/sample?options=-c%20statement_timeout%3D5000"
+    masked = db._mask_sensitive_dsn(  # pyright: ignore[reportPrivateUsage]  # noqa: SLF001
+        dsn,
+    )
+
+    assert "user" not in masked
+    assert "password" not in masked
+    assert masked.startswith("postgresql+psycopg://***:***@db.example.com:5432/sample")
 
 
 def test_upsert_dataframe_updates_existing() -> None:
