@@ -191,7 +191,7 @@ POPULATION_2024_05_PAGE = OpenDataPage(
             title="川崎市の世帯数・人口（令和6年5月1日現在）",
             url=urljoin(
                 POPULATION_2024_05_BASE_URL,
-                "../cmsfiles/contents/0000165/165956/2404(no712).xls",
+                "../cmsfiles/contents/0000165/165956/2405(no712).xls",
             ),
             file_format="xls",
             updated_at="2024-05-01",
