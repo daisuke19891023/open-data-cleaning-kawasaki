@@ -76,7 +76,7 @@ pygments==2.19.2
     #   pytest
 pymdown-extensions==10.16
     # via mkdocs-material
-pytest==8.4.1
+pytest==9.0.1
     # via
     #   test-project-alpha (pyproject.toml)
     #   pytest-cov
